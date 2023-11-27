@@ -11,7 +11,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { PlasmidComponent } from './plasmid/plasmid.component';
-import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AtgcInputRestrictorDirective } from './atgc-input-restrictor.directive';
+import { LinearComponent } from './linear/linear.component';
 
 
 @NgModule({
@@ -19,6 +23,8 @@ import { FormsModule } from '@angular/forms';
     AppComponent,
     FormComponent,
     PlasmidComponent,
+    AtgcInputRestrictorDirective,
+    LinearComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,7 +34,9 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    ReactiveFormsModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]

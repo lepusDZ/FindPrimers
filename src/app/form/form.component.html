@@ -1,12 +1,27 @@
 <div class="container">
     <div class="formHolder bg-white m-3 shadow-lg">
-        <h2 class="text-center">Lorem ipsum</h2>
+        <h2 class="text-center">{{ label }}</h2>
         <form (ngSubmit)="onSubmit(f)" #f="ngForm" class="p-3">
-            <mat-form-field style="width:100%;" appearance="outline" hintLabel="Max 20000 characters"
-                class="mb-3 mb-sm-5">
-                <mat-label>Lorem Ipsum</mat-label>
-                <textarea #textarea name="myTextarea" maxlength="20000" matInput rows="13" [(ngModel)]="input"
-                    (ngModelChange)="onInputChange($event)"></textarea>
+            <mat-form-field style="width:100%;"
+            appearance="outline" 
+            hintLabel="Max 20000 characters"
+            class="mb-3 mb-sm-5" 
+            matTooltip="Your pasted text was filtered to meet the input expectations"
+            matTooltipPosition="right" 
+            #tooltip="matTooltip" 
+            matTooltipDisabled="{{ tooltipNotAllowed }}">
+                <mat-label>{{ label }}</mat-label>
+                <textarea #textarea
+                name="myTextarea"
+                maxlength="20000"
+                matInput
+                rows="13"
+                [(ngModel)]="input"
+                (ngModelChange)="onInputChange($event)"
+                appAtgcInputRestrictor
+                (pasteEvent)="handlePaste()"
+                placeholder="{{placeholder}}">
+            </textarea>
                 <mat-hint align="end">{{textarea.value.length}}/20000</mat-hint>
             </mat-form-field>
             <button mat-raised-button color="primary" class="shadow rounded">
