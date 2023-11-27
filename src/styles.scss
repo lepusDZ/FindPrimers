@@ -1,1 +1,69 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$DNA-primary: mat.define-palette(mat.$indigo-palette);
+$DNA-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$DNA-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$DNA-theme: mat.define-light-theme((
+  color: (
+    primary: $DNA-primary,
+    accent: $DNA-accent,
+    warn: $DNA-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($DNA-theme);
+
 /* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+
+$white: #ffffff;
+$light: #fffcf7;
+$dark: #04262e;
+$primary: #064645;
+$secondary: #800020;
+$info: #ec8d13;
+$success: #559a93;
+$warning: #eec807;
+$danger: #f60233;
+
+body { 
+    background: #BBD2C5;
+        /* fallback for old browsers */
+        background: -webkit-linear-gradient(to left, #292E49, #064645, #d9e9e0);
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to left, #292E49, #064645, #d9e9e0);
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            /* Hide scrollbars */
+        font-family: "Roboto-Regular";
+        position: relative;
+}
+html, body { height: 100%; 
+    overflow-x: hidden;
+    @media (min-width: 768px) {
+        overflow: hidden;
+    }}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+

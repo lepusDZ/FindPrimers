@@ -1,0 +1,37 @@
+@import '../../styles.scss';
+
+
+.container { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+.formHolder {
+   border-radius: 15px;
+   width: 90%;
+   height: 80%;
+   padding: 5%;
+}
+
+::ng-deep .mat-mdc-button-persistent-ripple {
+    background-color: $secondary;
+}
+
+button {
+    width: 100%;
+    height: 3rem;
+    /* Adjust the height as needed */
+    font-size: 1.2rem;
+    /* Adjust the font size as needed */
+}
+textarea {
+    resize: none; // Optional: To prevent users from resizing the textarea
+}
+
+@media (max-width: 768px) {
+    mat-hint, h2 {
+        font-size: smaller;
+    }
+}
+
