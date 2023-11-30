@@ -3,19 +3,28 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormComponent } from './form/form.component';
+import { FormComponent } from './main-page/form/form.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { PlasmidComponent } from './plasmid/plasmid.component';
+import { PlasmidComponent } from './main-page/plasmid/plasmid.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AtgcInputRestrictorDirective } from './atgc-input-restrictor.directive';
-import { LinearComponent } from './linear/linear.component';
+
+import { LinearComponent } from './main-page/linear/linear.component';
+import { ScrollComponent } from './scroll/scroll.component';
+import { AppRoutingModule } from './app-routing.module';
+import { MainPageComponent } from './main-page/main-page.component';
+import { PlasmidScrollComponent } from './scroll/plasmid-scroll/plasmid-scroll.component';
+import { ButtonsComponent } from './scroll/buttons/buttons.component';
+import { LinearScrollComponent } from './scroll/linear-scroll/linear-scroll.component';
+import { DragDropComponent } from './scroll/drag-drop/drag-drop.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -25,6 +34,12 @@ import { LinearComponent } from './linear/linear.component';
     PlasmidComponent,
     AtgcInputRestrictorDirective,
     LinearComponent,
+    ScrollComponent,
+    MainPageComponent,
+    PlasmidScrollComponent,
+    ButtonsComponent,
+    LinearScrollComponent,
+    DragDropComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,7 +51,9 @@ import { LinearComponent } from './linear/linear.component';
     MatButtonModule,
     MatIconModule,
     ReactiveFormsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    AppRoutingModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

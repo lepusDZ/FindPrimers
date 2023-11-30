@@ -1,4 +1,4 @@
-@import '../../styles.scss';
+@import '../../../styles.scss';
 
 
 .container { 
@@ -14,8 +14,11 @@
    padding: 5%;
 }
 
-::ng-deep .mat-mdc-button-persistent-ripple {
-    background-color: $secondary;
+
+button[disabled] {
+    .mat-mdc-button-persistent-ripple {
+            background-color: white;
+        }
 }
 
 button {

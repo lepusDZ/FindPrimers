@@ -1,0 +1,17 @@
+<div class="d-flex justify-content-center align-items-center" style="height: 100%;" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()" (mousedown)="startScroll('left')"
+        (mouseup)="startScroll('right')" 
+        (click)="stopScroll()"
+        (mousedown)="stopScroll()"
+        (mouseup)="stopScroll()"
+        #scrollElement>
+    <div class="container-fluid">
+        <div class="text-display" style="margin-bottom: -5px;">{{ outerShown }}</div>
+        <div class="text-display">{{ innerShown }}</div>
+        <div class="button-container">
+            <button (mouseenter)="startScroll('left')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll Left</button>
+            <button (mouseenter)="startScroll('right')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll
+                Right</button>
+        </div>
+    </div>
+    
+</div>

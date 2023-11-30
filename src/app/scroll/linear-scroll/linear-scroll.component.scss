@@ -1,0 +1,29 @@
+div {
+    color: white;
+    font-family: monospace;
+    letter-spacing: 1px;
+    font-size: 88%
+}
+
+.button-container {
+    font-family: Roboto !important;
+}
+
+.text-display {
+    text-align: center;
+    /* Center text horizontally */
+    font-size: 1.5vw;
+    /* Adjust the font size as needed */
+    width: 100%;
+    /* Ensure the div takes the full width */
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top:1rem;
+    width: 100%;
+    z-index: 10;
+    /* Adjust this value as needed */
+}

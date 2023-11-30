@@ -49,21 +49,35 @@ $warning: #eec807;
 $danger: #f60233;
 
 body { 
-    background: #BBD2C5;
-        /* fallback for old browsers */
-        background: -webkit-linear-gradient(to left, #292E49, #064645, #d9e9e0);
-        /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to left, #292E49, #064645, #d9e9e0);
-        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-            /* Hide scrollbars */
         font-family: "Roboto-Regular";
         position: relative;
 }
-html, body { height: 100%; 
+html, body {
     overflow-x: hidden;
     @media (min-width: 768px) {
         overflow: hidden;
     }}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.background-default {
+  background: #BBD2C5;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #292E49, #064645, #d9e9e0);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #292E49, #064645, #d9e9e0);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /* Hide scrollbars */
+    height: 100%;
+    overflow-wrap: break-word;
+}
 
+.background-scroll {
+  background: #292E49;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to left, #292E49, #064645);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to left, #292E49, #064645);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /* Hide scrollbars */
+    height: 100vh;
+}

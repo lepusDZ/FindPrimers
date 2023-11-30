@@ -1,7 +1,8 @@
 import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { InputService } from '../services/input.service';
+import { InputService } from '../../services/input.service';
 import { MatTooltip } from '@angular/material/tooltip';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form',
@@ -11,21 +12,25 @@ import { MatTooltip } from '@angular/material/tooltip';
 export class FormComponent {
   input: string = '';
   label: string = "Paste the Plasmid Sequence";
-  placeholder: string = 'AGCAGGCAAAGCGCGC...';
-  
+  placeholder: string = 'TTCTTGAAGACGAAAGGGCCTCGTGATACGCCTATTTTTATAGGTTAATGTCATGATAATAATGGTTTCTTAGACGT....';
+
   isFirstInputSubmitted: boolean = false;
-  tooltipNotAllowed:boolean = true;
+  isSecondInputSubmitted: boolean = false;
+
+  tooltipNotAllowed: boolean = true;
   isFirstPaste: boolean = true; // Track if it's the first paste
-  
+
   @ViewChild('tooltip') tooltip!: MatTooltip;
 
-  constructor(private inputService: InputService, private cdr: ChangeDetectorRef) { }
+  constructor(private inputService: InputService, private cdr: ChangeDetectorRef, private router: Router) { }
 
   onInputChange(newValue: string): void {
     if (!this.isFirstInputSubmitted) {
       this.inputService.setInput(newValue);
-    } else {
+    } else if (!this.isSecondInputSubmitted) {
       this.inputService.setSecondInput(newValue);
+    } else {
+      this.router.navigate(['/scroll']);
     }
   }
 
@@ -37,6 +42,7 @@ export class FormComponent {
         this.label = "Paste the Linear Sequence"
       } else {
         this.inputService.saveSecondInput(this.input);
+        this.isSecondInputSubmitted = true;
       }
       form.resetForm();
     }

@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 80vh;
 }
 
 .overlay-text {
@@ -25,7 +25,7 @@
 }
 
 svg {
-    animation: rotate 20s linear infinite;
+    animation: rotate 100s linear infinite;
     width: 100%;
     touch-action: none;
     height: auto;

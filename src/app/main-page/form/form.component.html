@@ -9,7 +9,8 @@
             matTooltip="Your pasted text was filtered to meet the input expectations"
             matTooltipPosition="right" 
             #tooltip="matTooltip" 
-            matTooltipDisabled="{{ tooltipNotAllowed }}">
+            matTooltipDisabled="{{ tooltipNotAllowed }}"
+            hideRequiredMarker>
                 <mat-label>{{ label }}</mat-label>
                 <textarea #textarea
                 name="myTextarea"
@@ -20,11 +21,12 @@
                 (ngModelChange)="onInputChange($event)"
                 appAtgcInputRestrictor
                 (pasteEvent)="handlePaste()"
-                placeholder="{{placeholder}}">
+                placeholder="{{placeholder}}"
+                required>
             </textarea>
                 <mat-hint align="end">{{textarea.value.length}}/20000</mat-hint>
             </mat-form-field>
-            <button mat-raised-button color="primary" class="shadow rounded">
+            <button mat-raised-button color="primary" class="shadow rounded" [disabled]="!input" [ngStyle]="">
                 <mat-icon>science</mat-icon>
                 Submit
             </button>

@@ -1,17 +1,3 @@
-<div class="row">
-  <div class="col-md-6">
-    <app-form></app-form>
-  </div>
-  <div class="col-md-6">
-    <div class="row">
-      <div class="col-md-12">
-        <app-plasmid></app-plasmid>
-      </div>
-    </div> 
-    <div class="row">
-      <div class="col-md-12">
-        <app-linear></app-linear>
-      </div>
-    </div>
-  </div>
+<div [class]="backgroundClass">
+<router-outlet></router-outlet>
 </div>

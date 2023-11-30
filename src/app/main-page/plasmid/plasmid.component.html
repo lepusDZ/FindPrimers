@@ -1,12 +1,12 @@
 <div class="align-center text-white" *ngIf="inputFromService">
-    <svg viewBox="0 0 200 200">
+    <svg viewBox="0 0 230 230">
         <g class="align-center">
             <!-- Draw the circle -->
-            <circle cx="100" cy="100" r="90" fill="transparent" stroke="transparent" />
+            <circle cx="115" cy="115" r="70" fill="transparent" stroke="transparent" />
 
             <!-- Define the first path -->
             <defs>
-                <path id="circle-path-1" d="M 100, 100 m -90, 0 a 90,90 0 1,1 180,0 a 90,90 0 1,1 -180,0" />
+                <path id="circle-path-1" d="M 115, 115 m -90, 0 a 90,90 0 1,1 180,0 a 90,90 0 1,1 -180,0" />
             </defs>
 
             <!-- Add text along the first path -->
@@ -17,7 +17,7 @@
             </text>
 
             <!-- Add text along the second path -->
-            <text dy="5" fill="blue"> <!-- Use a different fill color for visibility -->
+            <text dy="5">
                 <textPath xlink:href="#circle-path-1" startOffset="0%" letter-spacing="1px">
                     {{ processedInput }}
                 </textPath>

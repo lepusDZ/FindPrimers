@@ -8,14 +8,19 @@ export class InputService {
     private inputSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
     private processedInputSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
     private secondInputSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+    private processedSecondSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
     input$ = this.inputSubject.asObservable();
     processed$ = this.processedInputSubject.asObservable();
     secondInput$ = this.secondInputSubject.asObservable();
+    secondProcessed$ = this.processedSecondSubject.asObservable()
 
     firstInput: string = '';
     secondInput: string = '';
+    
     processedInput: string = '';
+    processedSecond:string = '';
+    reversedComplement:string = '';
 
     setInput(value: string): void {
         this.inputSubject.next(value.toUpperCase());
@@ -29,12 +34,18 @@ export class InputService {
 
     setSecondInput(value: string): void {
         this.secondInputSubject.next(value.toUpperCase())
+        this.processedSecondSubject.next(this.translateValue(value.toUpperCase()))
     }
     
     saveSecondInput(value:string): void {
         this.secondInput = value.toUpperCase()
+        this.processedSecond = this.translateValue(this.secondInput)
+        this.reversedComplement = this.reverseString(this.processedSecond)
     }
 
+    private reverseString(str:string) {
+        return str.split("").reverse().join("");
+}
     private translateValue(value: string): string {
         return value.split('').map(char => {
             switch (char) {
@@ -46,4 +57,5 @@ export class InputService {
             }
         }).join('');
     }
+    
 }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,17 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'DNA';
+  backgroundClass = 'background-default';
+
+  constructor(private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        if (event.url.includes('/scroll')) {
+          this.backgroundClass = 'background-scroll';
+        } else {
+          this.backgroundClass = 'background-default';
+        }
+      }
+    });
+  }
 }

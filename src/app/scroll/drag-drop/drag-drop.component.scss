@@ -1,0 +1,39 @@
+.custom-drop-list {
+    border: 2px dashed #000;
+    /* Set the border style */
+    height: 10%;
+    width: 10%;
+    /* Set the height to 20% of the parent container */
+    padding: 10px;
+    /* Optional: Add padding to the drop list */
+    margin-top:1.5rem;
+    position: absolute;
+}
+
+ .orf::before {
+    z-index: auto;
+     content: "ORF";
+     /* Text you want to display */
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     font-weight: bold;
+     font-size: 16px;
+ }
+
+  .rs::before {
+      z-index: auto;
+      content: "RS ";
+      /* Text you want to display */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: bold;
+      font-size: 16px;
+  }
+
+ .z {
+    z-index:2;
+ }

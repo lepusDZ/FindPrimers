@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, debounceTime } from 'rxjs';
-import { InputService } from '../services/input.service';
+import { InputService } from '../../services/input.service';
 
 @Component({
   selector: 'app-plasmid',
@@ -16,7 +16,7 @@ export class PlasmidComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription.add(this.inputService.input$.pipe(
-      debounceTime(300)
+      debounceTime(0)
     ).subscribe(value => {
       this.inputFromService = value.slice(0, 139);
       if (value.length > 139) {
@@ -25,7 +25,7 @@ export class PlasmidComponent implements OnInit, OnDestroy {
     }));
 
     this.subscription.add(this.inputService.processed$.pipe(
-      debounceTime(300)
+      debounceTime(0)
     ).subscribe(value => {
       this.processedInput = value.slice(0, 139);
       if (value.length > 139) {
