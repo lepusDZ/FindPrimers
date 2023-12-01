@@ -16,22 +16,34 @@ export class RegexService implements OnInit {
     readonly enzymeData: Record<string, string> = enzymeData;
     regexPatterns = Object.keys(this.enzymeData);
 
-    filteredPatterns: string[] = [];
+    filteredPlasmidPatterns: string[] = [];
+    combinedPlasmidRegex: RegExp;
+
+    filteredLinearPatterns: string[] = [];
+    combinedLinearRegex: RegExp;
+
+    constructor() {
+        this.filteredPlasmidPatterns = this.filterRegexByFrequency(true);
+        this.combinedPlasmidRegex = new RegExp(this.filteredPlasmidPatterns.join('|'), 'g');
+        this.filteredLinearPatterns = this.filterRegexByFrequency(false);
+        this.combinedLinearRegex = new RegExp(this.filteredLinearPatterns.join('|'), 'g');
+        console.log(this.regexPatterns)
+        console.log(this.combinedPlasmidRegex)
+        console.log(this.combinedLinearRegex)
+    }
 
     ngOnInit(): void {
-        this.filteredPatterns = this.filterRegexByFrequency();
-        console.log('oninit')
     }
 
 
-    private filterRegexByFrequency(): string[] {
+    private filterRegexByFrequency(type:boolean): string[] {
         const filteredPatterns: string[] = [];
 
         this.regexPatterns.forEach(pattern => {
             const regex = new RegExp(pattern, 'g');
             let frequency = 0;
 
-            while (regex.exec(this.plasmid) !== null) {
+            while (regex.exec((type) ? this.plasmid : this.linear) !== null) {
                 frequency++;
             }
 
@@ -44,14 +56,12 @@ export class RegexService implements OnInit {
     }
 
 
-    highlightText(inputText: string): string {
+    highlightPlasmidText(inputText: string): string {
         let svgText = '';
-        const filteredPatterns = this.filterRegexByFrequency();
-        const combinedRegex = new RegExp(filteredPatterns.join('|'), 'g');
         let lastIndex = 0;
         let match:any;
 
-        while ((match = combinedRegex.exec(inputText)) !== null) {
+        while ((match = this.combinedPlasmidRegex.exec(inputText)) !== null) {
             // Text before the match
             svgText += `${inputText.substring(lastIndex, match.index)}`;
 
@@ -59,9 +69,41 @@ export class RegexService implements OnInit {
             const matchedPattern = Object.keys(this.enzymeData).find(pattern => new RegExp(pattern).test(match[0]));
             if (matchedPattern) {
                 const enzymeClass = this.enzymeData[matchedPattern];
-                svgText += `<tspan class="highlight ${enzymeClass}">${match[0]}</tspan>${match[0].slice(1)}`;
+                svgText += `<tspan class="highlight ${enzymeClass}">${match[0][0]}</tspan>${match[0].slice(1)}`;
             }
             
+
+            // Highlighted text
+
+            lastIndex = match.index + match[0].length;
+        }
+
+        // Remaining text after the last match
+        svgText += `${inputText.substring(lastIndex)}`;
+        console.log(this.plasmid.length)
+        console.log(this.linear.length)
+        return svgText;
+    }
+
+
+
+
+    highlightLinearText(inputText: string): string {
+        let svgText = '';
+        let lastIndex = 0;
+        let match: any;
+
+        while ((match = this.combinedLinearRegex.exec(inputText)) !== null) {
+            // Text before the match
+            svgText += `${inputText.substring(lastIndex, match.index)}`;
+
+            // Find which pattern was matched
+            const matchedPattern = Object.keys(this.enzymeData).find(pattern => new RegExp(pattern).test(match[0]));
+            if (matchedPattern) {
+                const enzymeClass = this.enzymeData[matchedPattern];
+                svgText += `<span class="highlight ${enzymeClass}">${match[0][0]}</span>${match[0].slice(1)}`;
+            }
+
 
             // Highlighted text
 

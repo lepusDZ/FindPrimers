@@ -21,6 +21,8 @@ export class InputService {
     
     processedInput: string = '';
     processedSecond:string = '';
+
+    constructor(private regexService: RegexService) {}
     
     setInput(value: string): void {
         this.inputSubject.next(value.toUpperCase());
@@ -29,6 +31,7 @@ export class InputService {
 
     saveFirstInput(value: string): void {
         this.firstInput = value.toUpperCase();
+        this.regexService.plasmid = this.firstInput;
         this.processedInput = this.translateValue(this.firstInput);
     }
 
@@ -39,6 +42,7 @@ export class InputService {
     
     saveSecondInput(value:string): void {
         this.secondInput = value.toUpperCase()
+        this.regexService.linear = this.secondInput;
         this.processedSecond = this.translateValue(this.secondInput)
     }
 

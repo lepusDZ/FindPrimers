@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { InputService } from '../../services/input.service';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
+import { RegexService } from '../../services/regex.service';
 
 @Component({
   selector: 'app-form',

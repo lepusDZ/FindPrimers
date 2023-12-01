@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { InputService } from '../../services/input.service';
+import { RegexService } from '../../services/regex.service';
 
 
 @Component({
@@ -24,18 +25,19 @@ export class LinearScrollComponent {
   outerShown: string = '';
   innerShown: string = '';
 
-  constructor(private inputService: InputService) { };
+  constructor(private inputService: InputService, private regexService: RegexService) { };
 
   ngOnInit(): void {
     this.outer = this.inputService.secondInput;
-    this.inner = this.inputService.processedSecond;
-    this.stringLength = this.outer.length; // Update stringLength based on actual string length
+    this.inner = this.inputService.processedInput;
+    this.regexService.linear = this.outer;
+    this.stringLength = this.outer.length
     this.updateShownText();
   }
 
   updateShownText(): void {
-    this.outerShown = this.sliceString(this.outer);
-    this.innerShown = this.sliceString(this.inner);
+    this.outerShown = this.regexService.highlightLinearText((this.sliceString(this.outer)));
+    this.innerShown = this.sliceString(this.inner)
   }
 
   sliceString(str: string): string {

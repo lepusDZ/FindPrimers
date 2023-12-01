@@ -5,8 +5,8 @@
         (mouseup)="stopScroll()"
         #scrollElement>
     <div class="container-fluid">
-        <div class="text-display" style="margin-bottom: -5px;">{{ outerShown }}</div>
-        <div class="text-display">{{ innerShown }}</div>
+        <div class="text-display" style="margin-bottom: -5px;" [innerHTML]="outerShown | safeHtml"></div>
+        <div class="text-display" [innerHTML]="innerShown | safeHtml"></div>
         <div class="button-container">
             <button (mouseenter)="startScroll('left')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll Left</button>
             <button (mouseenter)="startScroll('right')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll

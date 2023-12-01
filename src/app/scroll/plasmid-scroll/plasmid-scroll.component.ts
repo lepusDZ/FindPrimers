@@ -13,8 +13,10 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
 
   outer: string = '';
   inner: string = '';
+
   start: number = 0;
-  end: number = 136;
+  end: number = 300;
+
   stringLength: number = 0; // Adjust as needed
   isScrolling: boolean = false;
   scrollInterval: any;
@@ -23,10 +25,6 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   innerShown: string = '';
 
   labels: any[] = [];
-
-  textSegments: string[] = []; // Holds the segmented text
-  visibleSegmentIndices: number[] = []; // Indices of the segments currently in view
-  segmentHeight = 50;
 
   constructor(private inputService: InputService, private regexService: RegexService) { };
 
@@ -46,9 +44,9 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       const textElements = this.scrollElement.nativeElement.querySelectorAll('tspan.highlight');
       this.labels = Array.from(textElements).map((element) => {
-        const textElement = element as SVGTextElement; // Type assertion here
+        const textElement = element as SVGTextElement; 
         const bbox = textElement.getBBox();
-        const enzymeClass = textElement.classList.value.split(' ')[1]; // Assume this is the text you want
+        const enzymeClass = textElement.classList.value.split(' ')[1];
         // Calculate x, y based on bbox; may need to adjust if it's not positioning correctly
         return {
           x: bbox.x + bbox.width%2+1,
@@ -63,22 +61,15 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
 
 
   updateShownText(): void {
-    this.outerShown = this.regexService.highlightText((this.sliceString(this.outer)).slice(0, 136));
+    this.outerShown = this.regexService.highlightPlasmidText((this.sliceString(this.outer)));
     this.innerShown = this.sliceString(this.inner)
     this.calculateLabelPositions()
-    console.log(this.outerShown.length, 'outershown')
   }
 
   sliceString(str: string): string {
-    console.log('end ',this.end, 'start ', this.start)
     if (this.end > this.start) {
-      console.log((str.slice(this.start, this.stringLength) + str.slice(0, this.end - this.stringLength)).length, 'end>start')
-      console.log((str.slice(this.start, this.stringLength).length))
-      console.log(+ str.slice(0, this.end - this.stringLength).length)
-
-      return str.slice(this.start, this.stringLength) + str.slice(0, this.end - this.stringLength);
+      return str.slice(this.start, this.end);
     } else {
-      console.log((str.slice(this.start) + str.slice(0, this.end)).length, 'else')
       // When end is less than start, wrap around the string
       return str.slice(this.start) + str.slice(0, this.end);
     }
