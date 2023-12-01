@@ -25,7 +25,19 @@ import { ButtonsComponent } from './scroll/buttons/buttons.component';
 import { LinearScrollComponent } from './scroll/linear-scroll/linear-scroll.component';
 import { DragDropComponent } from './scroll/drag-drop/drag-drop.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { HttpClientModule } from '@angular/common/http';
+import { DomSanitizer } from '@angular/platform-browser'
+import { PipeTransform, Pipe } from "@angular/core";
 
+@Pipe({
+  name: 'safeHtml'
+})
+export class SafeHtmlPipe implements PipeTransform {
+  constructor(private sanitized: DomSanitizer) { }
+  transform(value: any) {
+    return this.sanitized.bypassSecurityTrustHtml(value);
+  }
+}
 
 @NgModule({
   declarations: [
@@ -40,6 +52,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     ButtonsComponent,
     LinearScrollComponent,
     DragDropComponent,
+    SafeHtmlPipe
   ],
   imports: [
     BrowserModule,
@@ -53,7 +66,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     ReactiveFormsModule,
     MatTooltipModule,
     AppRoutingModule,
-    DragDropModule
+    DragDropModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

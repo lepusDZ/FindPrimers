@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { RegexService } from './regex.service';
 
 @Injectable({
     providedIn: 'root',
@@ -20,8 +21,7 @@ export class InputService {
     
     processedInput: string = '';
     processedSecond:string = '';
-    reversedComplement:string = '';
-
+    
     setInput(value: string): void {
         this.inputSubject.next(value.toUpperCase());
         this.processedInputSubject.next(this.translateValue(value.toUpperCase()));
@@ -40,12 +40,9 @@ export class InputService {
     saveSecondInput(value:string): void {
         this.secondInput = value.toUpperCase()
         this.processedSecond = this.translateValue(this.secondInput)
-        this.reversedComplement = this.reverseString(this.processedSecond)
     }
 
-    private reverseString(str:string) {
-        return str.split("").reverse().join("");
-}
+    
     private translateValue(value: string): string {
         return value.split('').map(char => {
             switch (char) {

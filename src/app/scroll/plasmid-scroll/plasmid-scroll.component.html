@@ -1,3 +1,4 @@
+
 <div class="plasmid-scroll-container">
 
     <svg viewBox="0 50 200 50" xmlns="http://www.w3.org/2000/svg" 
@@ -10,18 +11,17 @@
     (mouseup)="stopScroll()"
     #scrollElement
         >
+        <g *ngFor="let label of labels">
+            <text [attr.x]="label.x" [attr.y]="label.y">{{ label.text }}</text>
+        </g>
         <defs>
             <path id="halfOval" d="M 0,90 Q 100,50 200,90" fill="none" />
         </defs>
         <text>
-            <textPath xlink:href="#halfOval" startOffset="0%" letter-spacing="0.5px">
-                {{outerShown}}
-            </textPath>
+            <textPath #textpath [innerHTML]="outerShown | safeHtml" xlink:href="#halfOval" startOffset="0%" letter-spacing="0.5px"></textPath>
         </text>
         <text dy="4">
-            <textPath xlink:href="#halfOval" startOffset="0%" letter-spacing="0.5px">
-                {{innerShown}}
-            </textPath>
+            <textPath #textpath [innerHTML]="innerShown | safeHtml" xlink:href="#halfOval" startOffset="0%" letter-spacing="0.5px"></textPath>
         </text>
     </svg>
     <div class="button-container">

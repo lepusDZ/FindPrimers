@@ -1,12 +1,14 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { InputService } from '../../services/input.service';
+import { RegexService } from '../../services/regex.service';
 
 @Component({
   selector: 'app-plasmid-scroll',
   templateUrl: './plasmid-scroll.component.html',
-  styleUrl: './plasmid-scroll.component.scss'
+  styleUrl: './plasmid-scroll.component.scss',
 })
-export class PlasmidScrollComponent implements OnInit {
+
+export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   @ViewChild('scrollElement') scrollElement!: ElementRef;
 
   outer: string = '';
@@ -20,7 +22,9 @@ export class PlasmidScrollComponent implements OnInit {
   outerShown: string = '';
   innerShown: string = '';
 
-  constructor(private inputService: InputService) { };
+  labels: any[] = [];
+
+  constructor(private inputService: InputService, private regexService: RegexService) { };
 
   ngOnInit(): void {
     this.outer = this.inputService.firstInput;
@@ -28,10 +32,33 @@ export class PlasmidScrollComponent implements OnInit {
     this.stringLength = this.outer.length
     this.updateShownText();
   }
+  
+  ngAfterViewInit(): void {
+    this.calculateLabelPositions();
+  }
+
+  calculateLabelPositions(): void {
+    setTimeout(() => {
+      const textElements = this.scrollElement.nativeElement.querySelectorAll('tspan.highlight');
+      this.labels = Array.from(textElements).map((element) => {
+        const textElement = element as SVGTextElement; // Type assertion here
+        const bbox = textElement.getBBox();
+        const enzymeClass = textElement.textContent; // Assume this is the text you want
+        // Calculate x, y based on bbox; may need to adjust if it's not positioning correctly
+        return {
+          x: bbox.x + bbox.width / 2,
+          y: bbox.y - bbox.height, // Position above the tspan
+          text: enzymeClass
+        };
+      });
+    }, 0); // setTimeout with 0 to wait for the next tick when DOM is updated
+  }
+
 
   updateShownText(): void {
-    this.outerShown = this.sliceString(this.outer);
+    this.outerShown = this.regexService.highlightText(this.sliceString(this.outer));
     this.innerShown = this.sliceString(this.inner);
+    this.calculateLabelPositions();
   }
 
   sliceString(str: string): string {
