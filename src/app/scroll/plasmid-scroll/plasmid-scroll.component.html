@@ -12,10 +12,13 @@
     #scrollElement
         >
         <g *ngFor="let label of labels">
-            <text [attr.x]="label.x" [attr.y]="label.y">{{ label.text }}</text>
+                <line [attr.x1]="label.linestartX" [attr.y1]="label.linestartY" [attr.x2]="label.x" [attr.y2]="label.y"
+                    style="stroke:white; stroke-width: 0.1px;"></line>
+
+            <text [attr.x]="label.x" [attr.y]="label.y" class="label">{{ label.text }}</text>
         </g>
         <defs>
-            <path id="halfOval" d="M 0,90 Q 100,50 200,90" fill="none" />
+            <path id="halfOval" d="M -15,100 Q 100,50 205,95" fill="none" />
         </defs>
         <text>
             <textPath #textpath [innerHTML]="outerShown | safeHtml" xlink:href="#halfOval" startOffset="0%" letter-spacing="0.5px"></textPath>

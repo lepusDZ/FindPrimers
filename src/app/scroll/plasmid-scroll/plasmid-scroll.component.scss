@@ -11,6 +11,17 @@ text {
     fill: white;
 }
 
+.label {
+    font-size: 0.18vw !important;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
 @media (max-width: 600px) {
 
     /* Example breakpoint for mobile devices */

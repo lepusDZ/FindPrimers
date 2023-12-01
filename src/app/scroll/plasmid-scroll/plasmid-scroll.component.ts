@@ -24,10 +24,15 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
 
   labels: any[] = [];
 
+  textSegments: string[] = []; // Holds the segmented text
+  visibleSegmentIndices: number[] = []; // Indices of the segments currently in view
+  segmentHeight = 50;
+
   constructor(private inputService: InputService, private regexService: RegexService) { };
 
   ngOnInit(): void {
     this.outer = this.inputService.firstInput;
+    this.regexService.plasmid = this.outer;
     this.inner = this.inputService.processedInput;
     this.stringLength = this.outer.length
     this.updateShownText();
@@ -43,12 +48,14 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
       this.labels = Array.from(textElements).map((element) => {
         const textElement = element as SVGTextElement; // Type assertion here
         const bbox = textElement.getBBox();
-        const enzymeClass = textElement.textContent; // Assume this is the text you want
+        const enzymeClass = textElement.classList.value.split(' ')[1]; // Assume this is the text you want
         // Calculate x, y based on bbox; may need to adjust if it's not positioning correctly
         return {
-          x: bbox.x + bbox.width / 2,
+          x: bbox.x + bbox.width%2+1,
           y: bbox.y - bbox.height, // Position above the tspan
-          text: enzymeClass
+          text: enzymeClass,
+          linestartX: bbox.x + bbox.width % 2 + 1,
+          linestartY: bbox.y
         };
       });
     }, 0); // setTimeout with 0 to wait for the next tick when DOM is updated
@@ -56,15 +63,22 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
 
 
   updateShownText(): void {
-    this.outerShown = this.regexService.highlightText(this.sliceString(this.outer));
-    this.innerShown = this.sliceString(this.inner);
-    this.calculateLabelPositions();
+    this.outerShown = this.regexService.highlightText((this.sliceString(this.outer)).slice(0, 136));
+    this.innerShown = this.sliceString(this.inner)
+    this.calculateLabelPositions()
+    console.log(this.outerShown.length, 'outershown')
   }
 
   sliceString(str: string): string {
+    console.log('end ',this.end, 'start ', this.start)
     if (this.end > this.start) {
+      console.log((str.slice(this.start, this.stringLength) + str.slice(0, this.end - this.stringLength)).length, 'end>start')
+      console.log((str.slice(this.start, this.stringLength).length))
+      console.log(+ str.slice(0, this.end - this.stringLength).length)
+
       return str.slice(this.start, this.stringLength) + str.slice(0, this.end - this.stringLength);
     } else {
+      console.log((str.slice(this.start) + str.slice(0, this.end)).length, 'else')
       // When end is less than start, wrap around the string
       return str.slice(this.start) + str.slice(0, this.end);
     }
