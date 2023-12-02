@@ -44,9 +44,6 @@ export class DragDropComponent {
     }
   }
 
-  // onClick() {
-  //   this.buttonService.moveORFToDropped(event.previousIndex);
-  // }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

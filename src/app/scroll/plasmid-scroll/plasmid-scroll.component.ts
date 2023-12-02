@@ -31,6 +31,7 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.outer = this.inputService.firstInput;
     this.regexService.plasmid = this.outer;
+    this.regexService.getLowFrequencyPlasmidPatterns(this.outer)
     this.inner = this.inputService.processedInput;
     this.stringLength = this.outer.length
     this.updateShownText();
@@ -61,7 +62,7 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
 
 
   updateShownText(): void {
-    this.outerShown = this.regexService.highlightPlasmidText((this.sliceString(this.outer)));
+    this.outerShown = this.regexService.highlightPlasmidText(this.sliceString(this.outer));
     this.innerShown = this.sliceString(this.inner)
     this.calculateLabelPositions()
   }

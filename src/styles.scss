@@ -81,3 +81,39 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     /* Hide scrollbars */
     height: 100vh;
 }
+
+
+.highlight-container {
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  margin: 0;
+  padding: 0;
+  /* Adjust spacing between containers */
+}
+
+
+.label {
+  position: absolute;
+  top: -30px;
+  /* Adjust this value to position the label above the text */
+  left: 0;
+  padding: 2px 5px;
+  font-size: 1vw !important;
+  white-space: nowrap;
+}
+
+.label::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  /* Align with the left side of the .label */
+  bottom: -13px;
+  /* Align with the bottom of the .label */
+  width: 0.5px;
+  /* Width of the line */
+  height: 20px;
+  /* Length of the line going downwards */
+  background-color: white;
+  /* Line color, you can change it as needed */
+}

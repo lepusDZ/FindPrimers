@@ -61,4 +61,10 @@ export class FormComponent {
       }, 3000);
     }
   }
+
+  get isInputValid(): boolean {
+    if (this.input) {
+      return this.input.length >= 500;
+    } return false;
+  }
 }

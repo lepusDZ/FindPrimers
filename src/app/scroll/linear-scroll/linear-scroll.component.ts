@@ -31,6 +31,7 @@ export class LinearScrollComponent {
     this.outer = this.inputService.secondInput;
     this.inner = this.inputService.processedInput;
     this.regexService.linear = this.outer;
+    this.regexService.getLowFrequencyLinearPatterns(this.outer)
     this.stringLength = this.outer.length
     this.updateShownText();
   }
