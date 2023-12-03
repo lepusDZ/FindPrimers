@@ -15,14 +15,20 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   inner: string = '';
 
   start: number = 0;
-  end: number = 300;
+  end: number = 200;
 
   stringLength: number = 0; // Adjust as needed
   isScrolling: boolean = false;
   scrollInterval: any;
+  
+  orfs: string[] = [];
 
   outerShown: string = '';
   innerShown: string = '';
+  
+  orfsShown1:string = '';
+  orfsShown2: string = '';
+  orfsShown3: string = '';
 
   labels: any[] = [];
 
@@ -30,10 +36,13 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.outer = this.inputService.firstInput;
-    this.regexService.plasmid = this.outer;
+    this.regexService.plasmid = this.outer
     this.regexService.getLowFrequencyPlasmidPatterns(this.outer)
     this.inner = this.inputService.processedInput;
     this.stringLength = this.outer.length
+    this.orfs = this.regexService.highlightOrfsWithCaseVerbose(this.outer, 0, 2500)
+    console.log(this.outer.length,this.inner.length,this.orfs.length)
+    console.log(this.orfs)
     this.updateShownText();
   }
   
@@ -64,10 +73,15 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   updateShownText(): void {
     this.outerShown = this.regexService.highlightPlasmidText(this.sliceString(this.outer));
     this.innerShown = this.sliceString(this.inner)
+    this.orfsShown1 = this.sliceString(this.orfs[0])
+    this.orfsShown2 = this.sliceString(this.orfs[1])
+    this.orfsShown3 = this.sliceString(this.orfs[2])
     this.calculateLabelPositions()
   }
 
   sliceString(str: string): string {
+    console.log('end', this.end, 'start', this.start)
+    console.log(this.orfsShown1)
     if (this.end > this.start) {
       return str.slice(this.start, this.end);
     } else {
@@ -75,6 +89,7 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
       return str.slice(this.start) + str.slice(0, this.end);
     }
   }
+
 
   @HostListener('wheel', ['$event'])
   onScroll(event: WheelEvent): void {

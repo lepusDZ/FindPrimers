@@ -26,6 +26,18 @@
         <text dy="4">
             <textPath #textpath [innerHTML]="innerShown | safeHtml" xlink:href="#halfOval" startOffset="0%" letter-spacing="0.5px"></textPath>
         </text>
+        <text dy="-4">
+            <textPath #textpath [innerHTML]="orfsShown1 | safeHtml" xlink:href="#halfOval" startOffset="0%"
+                letter-spacing="0.5px" class="whitespace"></textPath>
+        </text>
+        <text dy="-8">
+            <textPath #textpath [innerHTML]="orfsShown2 | safeHtml" xlink:href="#halfOval" startOffset="0%"
+                letter-spacing="0.5px" class="whitespace"></textPath>
+        </text>
+        <text dy="-12">
+            <textPath #textpath [innerHTML]="orfsShown3 | safeHtml" xlink:href="#halfOval" startOffset="0%"
+                letter-spacing="0.5px" class="whitespace"></textPath>
+        </text>
     </svg>
     <div class="button-container">
         <button  (mouseenter)="startScroll('left')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll Left</button>

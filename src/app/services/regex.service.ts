@@ -1,12 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import enzymeData from './assets/enzyme-data.json';
 
-export interface Orf {
-    start: number;
-    end: number;
-    direction: 'forward' | 'reverse';
-}
-
 @Injectable({
     providedIn: 'root',
 })
@@ -48,6 +42,7 @@ export class RegexService implements OnInit {
         if (this.combinedLinearRegex.toString() === '/(?:)/g') {
             throw new Error('Plasmid has no regexes');
         }
+        console.log(this.highlightOrfsWithCaseVerbose(this.plasmid,10,2500))
     }
 
     getLowFrequencyLinearPatterns(linear: string): void {
@@ -69,8 +64,6 @@ export class RegexService implements OnInit {
 
         }
     }
-
-
 
 
     highlightPlasmidText(inputText: string): string {
@@ -136,4 +129,43 @@ export class RegexService implements OnInit {
     }
 
 
+    highlightOrfsWithCaseVerbose(sequence:string, minSize:number, maxSize:number) {
+        const stopCodons = new Set(["TAA", "TAG", "TGA"]);
+        let coloredSeq0 = Array(sequence.length).fill(' ');
+        let coloredSeq1 = Array(sequence.length).fill(' ');
+        let coloredSeq2 = Array(sequence.length).fill(' ');
+        const sequenceLength = sequence.length;
+
+        for (let frame = 0; frame < 3; frame++) {
+            let i = frame;
+
+            while (i < sequenceLength - 2) {
+                let codon = sequence.substring(i, i + 3).toUpperCase();
+                if (codon === "ATG") {
+                    let start = i;
+                    for (let j = i; j < sequenceLength; j += 3) {
+                        codon = sequence.substring(j, j + 3).toUpperCase();
+                        if (stopCodons.has(codon) || j >= sequenceLength - 2) {
+                            let end = j + 2;
+                            let orfLength = end - start + 1;
+                            if (minSize <= orfLength && orfLength <= maxSize) {
+                                for (let k = start; k <= end; k++) {
+                                    if (frame === 0) coloredSeq0[k] = sequence[k];
+                                    if (frame === 1) coloredSeq1[k] = sequence[k];
+                                    if (frame === 2) coloredSeq2[k] = sequence[k];
+                                }
+                            }
+                            i = j + 3; // Move to the next codon after the stop codon
+                            break;
+                        }
+                    }
+                } else {
+                    i += 3;
+                }
+            }
+        }
+
+        // Decide how to return the sequences
+        return [coloredSeq0.join('').replace(/[ATGC] /g, '>').replace(/[ATGC]/g, '='), coloredSeq1.join('').replace(/[ATGC] /g, '>').replace(/[ATGC]/g, '='), coloredSeq2.join('').replace(/[ATGC] /g, '>').replace(/[ATGC]/g, '=')];
+    }
 }
