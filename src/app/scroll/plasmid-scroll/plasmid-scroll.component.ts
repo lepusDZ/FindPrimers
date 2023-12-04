@@ -7,7 +7,7 @@ import { ButtonService } from '../../services/button.service';
   selector: 'app-plasmid-scroll',
   templateUrl: './plasmid-scroll.component.html',
   styleUrl: './plasmid-scroll.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class PlasmidScrollComponent implements OnInit, AfterViewInit {
@@ -15,7 +15,7 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
 
   outer: string = '';
   inner: string = '';
-  reversedLinearComplement: string = '';
+  reversedPlasmidComplement: string = '';
 
   @Input() start: number = 0;
   @Input() end: number = 150;
@@ -46,16 +46,14 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
     this.outer = this.inputService.firstInput;
     this.inner = this.inputService.processedInput;
 
-    this.reversedLinearComplement = this.inputService.reversedInput
+    this.reversedPlasmidComplement = this.inputService.reversedInput
     this.regexService.plasmid = this.outer
     this.regexService.getLowFrequencyPlasmidPatterns(this.outer)
     this.stringLength = this.outer.length
 
     this.orfs = this.regexService.highlightOrfsWithCaseVerbose(this.outer, this.inputService.pORFmin, this.inputService.pORFmax, 0)
-    this.orfsR = this.regexService.highlightOrfsWithCaseVerbose(this.reversedLinearComplement, this.inputService.lORFmin, this.inputService.lORFmax, 1)
+    this.orfsR = this.regexService.highlightOrfsWithCaseVerbose(this.reversedPlasmidComplement, this.inputService.pORFmin, this.inputService.pORFmax, 1)
     
-    // this.RSsubject.next(Object.keys(this.regexService.shownPlasmidRegex))
-
     this.updateShownText();
   }
   
@@ -72,7 +70,7 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   }
 
   calculateLabelPositions(): void {
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       const textElements = this.scrollElement.nativeElement.querySelectorAll('tspan.highlight');
       this.labels = Array.from(textElements).map((element) => {
         const textElement = element as SVGTextElement; 
@@ -87,7 +85,7 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
           linestartY: bbox.y
         };
       });
-    }, 0); // setTimeout with 0 to wait for the next tick when DOM is updated
+    });
   }
 
 
@@ -103,7 +101,6 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
     this.rOrfsShown2 = this.sliceString(this.orfsR[1])
     this.rOrfsShown3 = this.sliceString(this.orfsR[2])
 
-    this.rOrfsShown1
     this.calculateLabelPositions()
   }
 

@@ -13,9 +13,11 @@ export class LinearScrollComponent {
 
   outer: string = '';
   inner: string = '';
+  reversedLinearComplement: string = '';
+
 
   start: number = 0;
-  end: number = 47; // Initially display first 50 characters
+  end: number = 150; // Initially display first 50 characters
 
   stringLength: number = 600; // Default string length
 
@@ -25,25 +27,59 @@ export class LinearScrollComponent {
   outerShown: string = '';
   innerShown: string = '';
 
+  orfs: string[] = [];
+  orfsR: string[] = [];
+
+  orfsShown1: string = '';
+  orfsShown2: string = '';
+  orfsShown3: string = '';
+
+  rOrfsShown1: string = '';
+  rOrfsShown2: string = '';
+  rOrfsShown3: string = '';
+
   constructor(private inputService: InputService, private regexService: RegexService) { };
 
   ngOnInit(): void {
     this.outer = this.inputService.secondInput;
     this.inner = this.inputService.processedInput;
+    this.reversedLinearComplement = this.inputService.reversedInput
+    
     this.regexService.linear = this.outer;
     this.regexService.getLowFrequencyLinearPatterns(this.outer)
     this.stringLength = this.outer.length
+
+    this.orfs = this.regexService.highlightOrfsWithCaseVerbose(this.outer, this.inputService.lORFmin, this.inputService.lORFmax, 0)
+    this.orfsR = this.regexService.highlightOrfsWithCaseVerbose(this.reversedLinearComplement, this.inputService.lORFmin, this.inputService.lORFmax, 1)
+
     this.updateShownText();
   }
 
   updateShownText(): void {
     this.outerShown = this.regexService.highlightLinearText((this.sliceString(this.outer)));
     this.innerShown = this.sliceString(this.inner)
+
+    this.orfsShown1 = this.sliceString(this.orfs[0])
+    this.orfsShown2 = this.sliceString(this.orfs[1])
+    this.orfsShown3 = this.sliceString(this.orfs[2])
+
+    this.rOrfsShown1 = this.sliceString(this.orfsR[0])
+    this.rOrfsShown2 = this.sliceString(this.orfsR[1])
+    this.rOrfsShown3 = this.sliceString(this.orfsR[2])
+
+
+    console.log(this.orfsShown1,
+    this.orfsShown2,
+    this.orfsShown3)
+    console.log(this.rOrfsShown1,
+      this.rOrfsShown2,
+      this.rOrfsShown3)
   }
 
   sliceString(str: string): string {
     return str.slice(this.start, Math.min(this.start + 47, this.stringLength));
   }
+
 
   @HostListener('wheel', ['$event'])
   onScroll(event: WheelEvent): void {

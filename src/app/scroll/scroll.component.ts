@@ -16,7 +16,6 @@ export class ScrollComponent implements OnInit {
       this.plasmid.start = value - 45;
       this.plasmid.end = value + 75;
       this.plasmid.updateShownText()
-      this.plasmid.calculateLabelPositions()
       this.plasmid.update()
     }
   }

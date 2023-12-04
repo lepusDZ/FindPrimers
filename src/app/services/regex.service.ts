@@ -16,8 +16,10 @@ export class RegexService {
     regexPatterns = Object.keys(this.enzymeData);
 
     combinedPlasmidRegex!: RegExp;
+    combinedPlasmidRegexList: string[] = []
 
     combinedLinearRegex!: RegExp;
+    combinedLinearRegexList: string[] = []
 
     shownPlasmidRegex: Record<string,number> = {}
     shownPlasmidRegexUpdate = new Subject<void>();
@@ -26,23 +28,26 @@ export class RegexService {
     getLowFrequencyPlasmidPatterns(plasmid: string): void {
         const plasmidPatterns: string[] = [];
         let match;
+        const priority: string[] = [];
 
         this.regexPatterns.forEach(pattern => {
             const regex = new RegExp(pattern, 'g');
             const plasmidMatchCount = (plasmid.match(regex) || []).length;
             
 
-            if (plasmidMatchCount > 0 && plasmidMatchCount < 5) {
+            if (plasmidMatchCount > 1 && plasmidMatchCount < 5) {
                 plasmidPatterns.push(pattern);
-                if (plasmidMatchCount == 1 && !this.combinedLinearRegex.source.includes(pattern)) {
-                    match = regex.exec(plasmid)
-                    this.shownPlasmidRegex[this.enzymeData[pattern]] = match!.index
-                }
+            }
+            if (plasmidMatchCount == 1) { //&& !this.combinedLinearRegex.source.includes(pattern)
+                match = regex.exec(plasmid)
+                this.shownPlasmidRegex[this.enzymeData[pattern]] = match!.index
+                priority.push(pattern)
             }
         });
         
         this.shownPlasmidRegexUpdate.next();
-        this.combinedPlasmidRegex = new RegExp(plasmidPatterns.join('|'), 'g');
+        this.combinedPlasmidRegexList = priority.concat(plasmidPatterns)
+        this.combinedPlasmidRegex = new RegExp(priority.concat(plasmidPatterns).join('|'), 'g');
         
         if (this.combinedLinearRegex.toString() === '/(?:)/g') {
             throw new Error('Plasmid has no regexes');
@@ -54,88 +59,98 @@ export class RegexService {
 
     getLowFrequencyLinearPatterns(linear: string): void {
         const linearPatterns: string[] = [];
+        let match;
+        const priority: string[] = [];
 
         this.regexPatterns.forEach(pattern => {
             const regex = new RegExp(pattern, 'g');
             const linearMatchCount = (linear.match(regex) || []).length;
 
-            if (linearMatchCount > 0 && linearMatchCount < 5) {
+            if (linearMatchCount > 1 && linearMatchCount < 5) {
                 linearPatterns.push(pattern);
+            }
+            if (linearMatchCount == 1) {
+                match = regex.exec(linear)
+                priority.push(pattern);
             }
         });
 
-        this.combinedLinearRegex = new RegExp(linearPatterns.join('|'), 'g');
+        this.combinedLinearRegexList = priority.concat(linearPatterns);
+        this.combinedLinearRegex = new RegExp(priority.concat(linearPatterns).join('|'), 'g');
 
         if (this.combinedLinearRegex.toString() === '/(?:)/g') {
             throw new Error('Linear has no regexes');
-
         }
     }
 
 
     highlightPlasmidText(inputText: string): string {
         let svgText = '';
-        let lastIndex = 0;
-        let match:any;
 
-        while ((match = this.combinedPlasmidRegex.exec(inputText)) !== null) {
-            // Text before the match
-            svgText += `${inputText.substring(lastIndex, match.index)}`;
-            
-            // Find which pattern was matched
-            const matchedPattern = this.regexPatterns.find(pattern => new RegExp(pattern).test(match[0]));
-            if (matchedPattern === undefined) {
-                match = null
+        for (let i = 0; i < inputText.length; i++) {
+            // Flag to check if a match is found at this position
+            let matchFound = false;
+
+            for (const pattern of this.combinedPlasmidRegexList) {
+                const regex = new RegExp(`^${pattern}`);
+                const match = inputText.substring(i).match(regex);
+
+                if (match) {
+                    const enzymeClass = this.enzymeData[pattern];
+                    svgText += `<tspan class="highlight ${enzymeClass}">${inputText[i]}</tspan>`;
+                    matchFound = true;
+                    break; // Stop checking other patterns if a match is found
+                }
             }
-            if (matchedPattern) {
-                const enzymeClass = this.enzymeData[matchedPattern];
-                svgText += `<tspan class="highlight ${enzymeClass}">${match[0][0]}</tspan>${match[0].slice(1)}`;
+
+            if (!matchFound) {
+                // Append the character as is, if no match is found
+                svgText += inputText[i];
             }
-            
-
-            // Highlighted text
-
-            lastIndex = match.index + match[0].length;
         }
 
-        // Remaining text after the last match
-        svgText += `${inputText.substring(lastIndex)}`;
         return svgText;
     }
+
+
+
 
     
 
     highlightLinearText(inputText: string): string {
         let htmlText = '';
-        let lastIndex = 0;
-        let match: any;
 
-        while ((match = this.combinedLinearRegex.exec(inputText)) !== null) {
-            // Text before the match
-            htmlText += `${inputText.substring(lastIndex, match.index)}`;
+        for (let i = 0; i < inputText.length; i++) {
+            // Flag to check if a match is found at this position
+            let matchFound = false;
 
-            // Find which pattern was matched
-            const matchedPattern = this.regexPatterns.find(pattern => new RegExp(pattern).test(match[0]));
-            if (matchedPattern === undefined) {
-                continue; // Skip if no pattern is matched
+            for (const pattern of this.combinedLinearRegexList) {
+                const regex = new RegExp(`^${pattern}`);
+                const match = inputText.substring(i).match(regex);
+
+                if (match) {
+                    const enzymeClass = this.enzymeData[pattern];
+                    // Wrapping only the first letter of the match
+                    htmlText += `<div class="highlight-container">
+                                 <div class="label">${enzymeClass}</div>
+                                 <span class="highlight ${enzymeClass}">${inputText[i]}</span>
+                             </div>`;
+                    matchFound = true;
+                    break; // Stop checking other patterns if a match is found
+                }
             }
 
-            const enzymeClass = this.enzymeData[matchedPattern];
-            // Wrap the matched text in a span with a label
-            htmlText += `<div class="highlight-container">
-                   <div class="label">${enzymeClass}</div>
-                   <span class="highlight ${enzymeClass}">${match[0]}</span>
-                 </div>`;
-
-            lastIndex = this.combinedLinearRegex.lastIndex;
+            if (!matchFound) {
+                // Append the character as is, if no match is found
+                htmlText += inputText[i];
+            }
         }
 
-        // Remaining text after the last match
-        htmlText += `${inputText.substring(lastIndex)}`;
         return htmlText;
     }
 
-
+    
+    
     highlightOrfsWithCaseVerbose(sequence:string, minSize:number, maxSize:number, type:number) {
         const stopCodons = new Set(["TAA", "TAG", "TGA"]);
         let coloredSeq0 = Array(sequence.length).fill(' ');
@@ -145,12 +160,16 @@ export class RegexService {
 
         for (let frame = 0; frame < 3; frame++) {
             let i = frame;
-
+            let j = i;
             while (i < sequenceLength - 2) {
+                if (j >= sequenceLength - 2) {
+                    i += 3
+                    break
+                }
                 let codon = sequence.substring(i, i + 3).toUpperCase();
                 if (codon === "ATG") {
                     let start = i;
-                    for (let j = i; j < sequenceLength; j += 3) {
+                    for (j = i; j < sequenceLength; j += 3) {
                         codon = sequence.substring(j, j + 3).toUpperCase();
                         if (stopCodons.has(codon) || j >= sequenceLength - 2) {
                             let end = j + 2;

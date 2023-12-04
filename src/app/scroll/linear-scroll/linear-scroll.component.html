@@ -7,6 +7,12 @@
     <div class="container-fluid">
         <div class="text-display" style="margin-bottom: -5px;" [innerHTML]="outerShown | safeHtml"></div>
         <div class="text-display" [innerHTML]="innerShown | safeHtml"></div>
+        <div class="text-display whitespace" [innerHTML]="orfsShown1 | safeHtml"></div>
+        <div class="text-display whitespace" [innerHTML]="orfsShown2 | safeHtml"></div>
+        <div class="text-display whitespace" [innerHTML]="orfsShown3 | safeHtml"></div>
+        <div class="text-display whitespace" [innerHTML]="rOrfsShown1 | safeHtml"></div>
+        <div class="text-display whitespace" [innerHTML]="rOrfsShown2 | safeHtml"></div>
+        <div class="text-display whitespace" [innerHTML]="rOrfsShown3 | safeHtml"></div>
         <div class="button-container">
             <button (mouseenter)="startScroll('left')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll Left</button>
             <button (mouseenter)="startScroll('right')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll
