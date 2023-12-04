@@ -1,12 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { PlasmidScrollComponent } from './plasmid-scroll/plasmid-scroll.component';
 
 @Component({
   selector: 'app-scroll',
   templateUrl: './scroll.component.html',
-  styleUrls: ['./scroll.component.scss']
+  styleUrls: ['./scroll.component.scss'],
 })
 export class ScrollComponent implements OnInit {
   blurred = true;
+
+  @ViewChild(PlasmidScrollComponent) plasmid! : PlasmidScrollComponent;
+
+  changePosition(value:number) {
+    if (value > 150) {
+      this.plasmid.start = value - 45;
+      this.plasmid.end = value + 75;
+      this.plasmid.updateShownText()
+      this.plasmid.calculateLabelPositions()
+      this.plasmid.update()
+    }
+  }
 
   onClick() {
     this.blurred = false;

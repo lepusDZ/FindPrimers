@@ -5,7 +5,7 @@
             <mat-form-field style="width:100%;"
             appearance="outline" 
             hintLabel="Max 20000 characters"
-            class="mb-3 mb-sm-5" 
+            class="mb-3 mb-sm-3" 
             matTooltip="Your pasted text was filtered to meet the input expectations"
             matTooltipPosition="right" 
             #tooltip="matTooltip" 
@@ -26,6 +26,11 @@
             </textarea>
                 <mat-hint align="end">{{textarea.value.length}}/20000</mat-hint>
             </mat-form-field>
+            <label for="mat-slider" class="d-flex justify-content-center">ORF range:</label>
+            <mat-slider min="100" max="20000" class="w-100 m-0" discrete>
+                <input value="100" matSliderStartThumb [(ngModel)]="min" name="min">
+                <input value="20000" matSliderEndThumb [(ngModel)]="max" name="max">
+            </mat-slider>
             <button mat-raised-button color="primary" class="shadow rounded" [disabled]="!isInputValid" [ngStyle]="">
                 <mat-icon>science</mat-icon>
                 Submit

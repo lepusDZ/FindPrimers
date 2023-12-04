@@ -28,6 +28,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { HttpClientModule } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser'
 import { PipeTransform, Pipe } from "@angular/core";
+import { MatSliderModule } from '@angular/material/slider';
 
 @Pipe({
   name: 'safeHtml'
@@ -63,6 +64,7 @@ export class SafeHtmlPipe implements PipeTransform {
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatSliderModule,
     ReactiveFormsModule,
     MatTooltipModule,
     AppRoutingModule,

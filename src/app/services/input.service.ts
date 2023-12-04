@@ -19,8 +19,17 @@ export class InputService {
     firstInput: string = '';
     secondInput: string = '';
     
+    
     processedInput: string = '';
     processedSecond:string = '';
+
+    reversedInput: string = '';
+    reversedSecond:string = '';
+
+    pORFmin: number = 100; // plasmid orf min
+    pORFmax:number = 20000;
+    lORFmin: number = 100; // linear orf min
+    lORFmax: number = 20000;
 
     constructor(private regexService: RegexService) {}
     
@@ -31,8 +40,9 @@ export class InputService {
 
     saveFirstInput(value: string): void {
         this.firstInput = value.toUpperCase();
-        this.regexService.plasmid = this.firstInput;
+        this.regexService.plasmid = this.firstInput; 
         this.processedInput = this.translateValue(this.firstInput);
+        this.reversedInput = this.processedInput.split("").reverse().join("");
     }
 
     setSecondInput(value: string): void {
@@ -44,6 +54,7 @@ export class InputService {
         this.secondInput = value.toUpperCase()
         this.regexService.linear = this.secondInput;
         this.processedSecond = this.translateValue(this.secondInput)
+        this.reversedSecond = this.processedSecond.split("").reverse().join("");
     }
 
     

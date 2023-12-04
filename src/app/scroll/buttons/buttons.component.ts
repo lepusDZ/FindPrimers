@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ButtonService } from '../../services/button.service';
 import { Subscription } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -11,7 +11,9 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 export class ButtonsComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   ORFbuttons: string[] = []; 
-  RSbuttons: string[] = []; 
+  RSbuttons: string[] = [];
+  
+  @Output() position = new EventEmitter<number>()
 
   constructor(protected buttonService: ButtonService) { }
 
@@ -44,6 +46,9 @@ export class ButtonsComponent implements OnInit, OnDestroy {
     }
   }
 
+  onClickRS(element:string) {
+    this.position.emit(this.buttonService.RSpositions[element])
+  }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

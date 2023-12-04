@@ -1,7 +1,7 @@
 
 <div class="plasmid-scroll-container">
 
-    <svg viewBox="0 50 200 50" xmlns="http://www.w3.org/2000/svg" 
+    <svg viewBox="0 60 200 50" xmlns="http://www.w3.org/2000/svg" 
     (mouseover)="onMouseOver()" 
     (mouseout)="onMouseOut()"
     (mousedown)="startScroll('left')"
@@ -11,7 +11,7 @@
     (mouseup)="stopScroll()"
     #scrollElement
         >
-        <g *ngFor="let label of labels">
+        <g *ngFor="let label of labels; trackBy: trackByFn">
                 <line [attr.x1]="label.linestartX" [attr.y1]="label.linestartY" [attr.x2]="label.x" [attr.y2]="label.y"
                     style="stroke:white; stroke-width: 0.1px;"></line>
 
@@ -26,17 +26,29 @@
         <text dy="4">
             <textPath #textpath [innerHTML]="innerShown | safeHtml" xlink:href="#halfOval" startOffset="0%" letter-spacing="0.5px"></textPath>
         </text>
-        <text dy="-4">
+        <text dy="7">
             <textPath #textpath [innerHTML]="orfsShown1 | safeHtml" xlink:href="#halfOval" startOffset="0%"
-                letter-spacing="0.5px" class="whitespace"></textPath>
+                letter-spacing="0.5px" class="whitespace" fill="orange"></textPath>
         </text>
-        <text dy="-8">
+        <text dy="9">
             <textPath #textpath [innerHTML]="orfsShown2 | safeHtml" xlink:href="#halfOval" startOffset="0%"
-                letter-spacing="0.5px" class="whitespace"></textPath>
+                letter-spacing="0.5px" class="whitespace" fill="orange"></textPath>
         </text>
-        <text dy="-12">
+        <text dy="12">
             <textPath #textpath [innerHTML]="orfsShown3 | safeHtml" xlink:href="#halfOval" startOffset="0%"
-                letter-spacing="0.5px" class="whitespace"></textPath>
+                letter-spacing="0.5px" class="whitespace" fill="orange"></textPath>
+        </text>
+        <text dy="15">
+            <textPath #textpath [innerHTML]="rOrfsShown1 | safeHtml" xlink:href="#halfOval" startOffset="0%"
+                letter-spacing="0.5px" class="whitespace" fill="orange"></textPath>
+        </text>
+        <text dy="18">
+            <textPath #textpath [innerHTML]="rOrfsShown2 | safeHtml" xlink:href="#halfOval" startOffset="0%"
+                letter-spacing="0.5px" class="whitespace" fill="orange"></textPath>
+        </text>
+        <text dy="21">
+            <textPath #textpath [innerHTML]="rOrfsShown3 | safeHtml" xlink:href="#halfOval" startOffset="0%"
+                letter-spacing="0.5px" class="whitespace" fill="orange"></textPath>
         </text>
     </svg>
     <div class="button-container">

@@ -1,48 +1,55 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import enzymeData from './assets/enzyme-data.json';
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
-export class RegexService implements OnInit {
+export class RegexService {
     plasmid:string = '';
     complement:string = '';
 
     linear:string = '';
     linearComplement:string = '';
-    reversedLinearComplement:string = '';
     
     readonly enzymeData: Record<string, string> = enzymeData;
     regexPatterns = Object.keys(this.enzymeData);
 
     combinedPlasmidRegex!: RegExp;
 
-    filteredLinearPatterns: string[] = [];
     combinedLinearRegex!: RegExp;
 
-    constructor() {
-    }
+    shownPlasmidRegex: Record<string,number> = {}
+    shownPlasmidRegexUpdate = new Subject<void>();
 
-    ngOnInit(): void {
-    }
-
+    
     getLowFrequencyPlasmidPatterns(plasmid: string): void {
         const plasmidPatterns: string[] = [];
+        let match;
 
         this.regexPatterns.forEach(pattern => {
             const regex = new RegExp(pattern, 'g');
             const plasmidMatchCount = (plasmid.match(regex) || []).length;
+            
 
-            if (plasmidMatchCount > 0 && plasmidMatchCount < 15) {
+            if (plasmidMatchCount > 0 && plasmidMatchCount < 5) {
                 plasmidPatterns.push(pattern);
+                if (plasmidMatchCount == 1 && !this.combinedLinearRegex.source.includes(pattern)) {
+                    match = regex.exec(plasmid)
+                    this.shownPlasmidRegex[this.enzymeData[pattern]] = match!.index
+                }
             }
         });
-
+        
+        this.shownPlasmidRegexUpdate.next();
         this.combinedPlasmidRegex = new RegExp(plasmidPatterns.join('|'), 'g');
+        
         if (this.combinedLinearRegex.toString() === '/(?:)/g') {
             throw new Error('Plasmid has no regexes');
         }
-        console.log(this.highlightOrfsWithCaseVerbose(this.plasmid,10,2500))
+        if (Object.keys(this.shownPlasmidRegex).length === 0) {
+            throw new Error('There is no place to insern linear into the plasmid')
+        }
     }
 
     getLowFrequencyLinearPatterns(linear: string): void {
@@ -52,7 +59,7 @@ export class RegexService implements OnInit {
             const regex = new RegExp(pattern, 'g');
             const linearMatchCount = (linear.match(regex) || []).length;
 
-            if (linearMatchCount > 0 && linearMatchCount < 15) {
+            if (linearMatchCount > 0 && linearMatchCount < 5) {
                 linearPatterns.push(pattern);
             }
         });
@@ -129,7 +136,7 @@ export class RegexService implements OnInit {
     }
 
 
-    highlightOrfsWithCaseVerbose(sequence:string, minSize:number, maxSize:number) {
+    highlightOrfsWithCaseVerbose(sequence:string, minSize:number, maxSize:number, type:number) {
         const stopCodons = new Set(["TAA", "TAG", "TGA"]);
         let coloredSeq0 = Array(sequence.length).fill(' ');
         let coloredSeq1 = Array(sequence.length).fill(' ');
@@ -165,7 +172,15 @@ export class RegexService implements OnInit {
             }
         }
 
-        // Decide how to return the sequences
-        return [coloredSeq0.join('').replace(/[ATGC] /g, '>').replace(/[ATGC]/g, '='), coloredSeq1.join('').replace(/[ATGC] /g, '>').replace(/[ATGC]/g, '='), coloredSeq2.join('').replace(/[ATGC] /g, '>').replace(/[ATGC]/g, '=')];
+        if (type === 0) {
+            return [coloredSeq0.join('').replace(/[ATGC]/g, '>'), 
+            coloredSeq1.join('').replace(/[ATGC]/g, '>'), 
+            coloredSeq2.join('').replace(/[ATGC]/g, '>')];
+        } else {
+            return [coloredSeq0.reverse().join("").replace(/[ATGC]/g, '<'),
+                coloredSeq1.reverse().join("").replace(/[ATGC]/g, '<'),
+                coloredSeq2.reverse().join("").replace(/[ATGC]/g, '<')];
+        }
     }
+
 }

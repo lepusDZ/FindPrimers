@@ -1,21 +1,35 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { RegexService } from './regex.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ButtonService {
-    private ORFsubject = new BehaviorSubject<string[]>(['ORF1', 'ORF2', 'ORF3']);
+  private ORFsubject = new BehaviorSubject<string[]>(['ORF1', 'ORF2', 'ORF3', 'asd', 'asd', 'asd', 'ORF1', 'ORF2', 'ORF3', 'asd', 'asd','asd']);
     private RSsubject = new BehaviorSubject<string[]>(['EcoRl', 'XhoI', 'MhoL']);
     private droppedORFsubject = new BehaviorSubject<string[]>([]);
     private droppedRSsubject = new BehaviorSubject<string[]>([]);
-
 
     ORFbuttons = this.ORFsubject.asObservable();
     RSbuttons = this.RSsubject.asObservable();
 
     droppedORF = this.droppedORFsubject.asObservable();
     droppedRS = this.droppedRSsubject.asObservable();
+
+    RSpositions: Record<string,number> = {};
+
+    constructor(private regexService: RegexService) {
+      this.regexService.shownPlasmidRegexUpdate.subscribe(() => {
+        this.updateRSButtons();
+      });
+    }
+
+  private updateRSButtons(): void {
+    // Update RSsubject with the keys from shownPlasmidRegex
+    this.RSpositions = this.regexService.shownPlasmidRegex
+    this.RSsubject.next(Object.keys(this.RSpositions));
+  }
 
     moveORFToDropped(index: number) {
         const currentORFButtons = this.ORFsubject.value;

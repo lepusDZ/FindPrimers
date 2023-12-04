@@ -12,6 +12,9 @@ import { RegexService } from '../../services/regex.service';
 })
 export class FormComponent {
   input: string = '';
+  min: number = 100;
+  max:number = 20000;
+
   label: string = "Paste the Plasmid Sequence";
   placeholder: string = 'TTCTTGAAGACGAAAGGGCCTCGTGATACGCCTATTTTTATAGGTTAATGTCATGATAATAATGGTTTCTTAGACGT....';
 
@@ -39,13 +42,25 @@ export class FormComponent {
     if (form.valid) {
       if (!this.isFirstInputSubmitted) {
         this.inputService.saveFirstInput(this.input);
+
+        this.inputService.pORFmin = this.min
+        this.inputService.pORFmax = this.max
+
         this.isFirstInputSubmitted = true;
         this.label = "Paste the Linear Sequence"
       } else {
         this.inputService.saveSecondInput(this.input);
+
+        this.inputService.lORFmin = this.min
+        this.inputService.lORFmax = this.max
+
         this.isSecondInputSubmitted = true;
       }
-      form.resetForm();
+      
+      form.resetForm({
+        min: this.min,  // Preserve the current min value
+        max: this.max
+      });
     }
   }
 

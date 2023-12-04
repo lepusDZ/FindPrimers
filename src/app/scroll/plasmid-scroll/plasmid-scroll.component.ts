@@ -1,11 +1,13 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild, AfterViewInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { InputService } from '../../services/input.service';
 import { RegexService } from '../../services/regex.service';
+import { ButtonService } from '../../services/button.service';
 
 @Component({
   selector: 'app-plasmid-scroll',
   templateUrl: './plasmid-scroll.component.html',
   styleUrl: './plasmid-scroll.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class PlasmidScrollComponent implements OnInit, AfterViewInit {
@@ -13,15 +15,17 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
 
   outer: string = '';
   inner: string = '';
+  reversedLinearComplement: string = '';
 
-  start: number = 0;
-  end: number = 200;
+  @Input() start: number = 0;
+  @Input() end: number = 150;
 
   stringLength: number = 0; // Adjust as needed
   isScrolling: boolean = false;
   scrollInterval: any;
   
   orfs: string[] = [];
+  orfsR: string[] = [];
 
   outerShown: string = '';
   innerShown: string = '';
@@ -30,24 +34,41 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   orfsShown2: string = '';
   orfsShown3: string = '';
 
+  rOrfsShown1: string = '';
+  rOrfsShown2: string = '';
+  rOrfsShown3: string = '';
+
   labels: any[] = [];
 
-  constructor(private inputService: InputService, private regexService: RegexService) { };
+  constructor(private inputService: InputService, private regexService: RegexService, private buttonService: ButtonService, private cdr: ChangeDetectorRef) { };
 
   ngOnInit(): void {
     this.outer = this.inputService.firstInput;
+    this.inner = this.inputService.processedInput;
+
+    this.reversedLinearComplement = this.inputService.reversedInput
     this.regexService.plasmid = this.outer
     this.regexService.getLowFrequencyPlasmidPatterns(this.outer)
-    this.inner = this.inputService.processedInput;
     this.stringLength = this.outer.length
-    this.orfs = this.regexService.highlightOrfsWithCaseVerbose(this.outer, 0, 2500)
-    console.log(this.outer.length,this.inner.length,this.orfs.length)
-    console.log(this.orfs)
+
+    this.orfs = this.regexService.highlightOrfsWithCaseVerbose(this.outer, this.inputService.pORFmin, this.inputService.pORFmax, 0)
+    this.orfsR = this.regexService.highlightOrfsWithCaseVerbose(this.reversedLinearComplement, this.inputService.lORFmin, this.inputService.lORFmax, 1)
+    
+    // this.RSsubject.next(Object.keys(this.regexService.shownPlasmidRegex))
+
     this.updateShownText();
   }
   
   ngAfterViewInit(): void {
     this.calculateLabelPositions();
+  }
+
+  trackByFn(item: any): number {
+    return item.id; 
+  }
+
+  update() {
+    this.cdr.markForCheck()
   }
 
   calculateLabelPositions(): void {
@@ -73,15 +94,20 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   updateShownText(): void {
     this.outerShown = this.regexService.highlightPlasmidText(this.sliceString(this.outer));
     this.innerShown = this.sliceString(this.inner)
+
     this.orfsShown1 = this.sliceString(this.orfs[0])
     this.orfsShown2 = this.sliceString(this.orfs[1])
     this.orfsShown3 = this.sliceString(this.orfs[2])
+
+    this.rOrfsShown1 = this.sliceString(this.orfsR[0])
+    this.rOrfsShown2 = this.sliceString(this.orfsR[1])
+    this.rOrfsShown3 = this.sliceString(this.orfsR[2])
+
+    this.rOrfsShown1
     this.calculateLabelPositions()
   }
 
   sliceString(str: string): string {
-    console.log('end', this.end, 'start', this.start)
-    console.log(this.orfsShown1)
     if (this.end > this.start) {
       return str.slice(this.start, this.end);
     } else {
