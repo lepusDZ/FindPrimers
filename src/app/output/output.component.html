@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="col-md-6">
+        <div class="formHolder bg-white m-3 shadow-lg">
+            <h2 class="text-center">Forward Primer</h2>
+            <mat-form-field style="width:100%;" appearance="outline" class="mb-3 mb-sm-3">
+                <textarea #forward 
+                name="forward" 
+                maxlength="20000" 
+                matInput rows="13" 
+                [(ngModel)]="forwardPrimer" 
+                [cdkCopyToClipboard]="forwardPrimer"
+                onfocus="this.select()"
+                readonly
+                (click)="openSnackBar()">
+                        </textarea>
+            </mat-form-field>
+            <button mat-raised-button color="primary" class="shadow rounded" [cdkCopyToClipboard]="forwardPrimer" (click)="openSnackBar()">
+                <mat-icon>content-copy</mat-icon>
+                Copy to clipboard
+            </button>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="formHolder bg-white m-3 shadow-lg">
+            <h2 class="text-center">Reverse Primer</h2> 
+            <mat-form-field style="width:100%;" appearance="outline" class="mb-3 mb-sm-3">
+                <textarea #reverse 
+                name="reverse" 
+                maxlength="20000" 
+                matInput rows="13" 
+                [(ngModel)]="reversePrimer" 
+                [cdkCopyToClipboard]="reversePrimer"
+                onfocus="this.select()"
+                readonly
+                (click)="openSnackBar()">
+                        </textarea>
+            </mat-form-field>
+            <button mat-raised-button color="primary" class="shadow rounded" [cdkCopyToClipboard]="reversePrimer" (click)="openSnackBar()">
+                <mat-icon>content-copy</mat-icon>
+                     Copy to clipboard
+            </button>
+        </div>
+    </div>
+</div>

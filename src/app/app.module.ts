@@ -29,6 +29,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser'
 import { PipeTransform, Pipe } from "@angular/core";
 import { MatSliderModule } from '@angular/material/slider';
+import { OutputComponent } from './output/output.component';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+
 
 @Pipe({
   name: 'safeHtml'
@@ -53,7 +58,8 @@ export class SafeHtmlPipe implements PipeTransform {
     ButtonsComponent,
     LinearScrollComponent,
     DragDropComponent,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    OutputComponent
   ],
   imports: [
     BrowserModule,
@@ -70,6 +76,8 @@ export class SafeHtmlPipe implements PipeTransform {
     AppRoutingModule,
     DragDropModule,
     HttpClientModule,
+    ClipboardModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

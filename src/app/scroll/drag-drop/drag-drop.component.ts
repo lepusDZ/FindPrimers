@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ButtonService } from '../../services/button.service'; // Adjust the path as necessary
 import { Subscription } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-drag-drop',
@@ -13,7 +14,7 @@ export class DragDropComponent {
   ORFbuttons: string[] = [];
   RSbuttons: string[] = [];
 
-  constructor(protected buttonService: ButtonService) { }
+  constructor(protected buttonService: ButtonService, private router: Router) { }
 
   ngOnInit() {
     this.subscription.add(
@@ -36,12 +37,18 @@ export class DragDropComponent {
         moveItemInArray(this.RSbuttons, event.previousIndex, event.currentIndex);
       }
     } else {
-      if (event.container.id === "ORF-drop" && event.previousContainer.id === "ORF-drag") {
+      if (event.container.id === "ORF-drop" && event.previousContainer.id === "RS-drag") {
         this.buttonService.moveORFToDropped(event.previousIndex);
       } else if (event.container.id === "RS-drop" && event.previousContainer.id === "RS-drag") {
         this.buttonService.moveRSToDropped(event.previousIndex);
       }
     }
+  }
+
+
+  onSubmit(){
+    this.buttonService.calculateOutput(this.ORFbuttons[0], this.RSbuttons[0])
+    this.router.navigate(['/output'])
   }
 
 

@@ -58,7 +58,7 @@ export class InputService {
     }
 
     
-    private translateValue(value: string): string {
+    translateValue(value: string): string {
         return value.split('').map(char => {
             switch (char) {
                 case 'A': return 'T';

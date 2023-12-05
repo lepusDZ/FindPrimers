@@ -12,7 +12,7 @@
 
  .orf::before {
     z-index: auto;
-     content: "ORF";
+     content: "RS1";
      /* Text you want to display */
      color:rgb(93, 93, 93);
      position: absolute;
@@ -25,7 +25,7 @@
 
   .rs::before {
       z-index: auto;
-      content: "RS";
+      content: "RS2";
       /* Text you want to display */
         color: rgb(93, 93, 93);
       position: absolute;

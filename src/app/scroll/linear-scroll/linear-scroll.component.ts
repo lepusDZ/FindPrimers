@@ -66,14 +66,6 @@ export class LinearScrollComponent {
     this.rOrfsShown1 = this.sliceString(this.orfsR[0])
     this.rOrfsShown2 = this.sliceString(this.orfsR[1])
     this.rOrfsShown3 = this.sliceString(this.orfsR[2])
-
-
-    console.log(this.orfsShown1,
-    this.orfsShown2,
-    this.orfsShown3)
-    console.log(this.rOrfsShown1,
-      this.rOrfsShown2,
-      this.rOrfsShown3)
   }
 
   sliceString(str: string): string {

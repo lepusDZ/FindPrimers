@@ -1,6 +1,7 @@
+<form (ngSubmit)="onSubmit()" class="h-100">
 <div class="row h-25">
     <div class="col-md-6">
-        <div class="d-flex flex-column custom-drop-list justify-content-center orf" cdkDropList id="ORF-drop" cdkDropListConnectedTo="ORF-drag"
+        <div class="d-flex flex-column custom-drop-list justify-content-center orf" cdkDropList id="ORF-drop" cdkDropListConnectedTo="RS-drag"
             (cdkDropListDropped)="drop($event)">
             <div *ngFor="let ORF of ORFbuttons; let i = index" class="d-grid gap-2 z">
                 <div cdkDrag class="btn btn-light p-2" (click)="this.buttonService.moveDroppedToORF(i)">{{ ORF }}
@@ -19,5 +20,6 @@
     </div>
 </div>
 <div class="row me-3 p-2 ms-2 mt-3">
-    <button class="btn btn-primary">Submit</button>
+    <button class="btn btn-primary" type="submit" [disabled]="!ORFbuttons.length || !RSbuttons.length">Submit</button>
 </div>
+</form>

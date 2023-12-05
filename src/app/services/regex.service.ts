@@ -24,10 +24,13 @@ export class RegexService {
     shownPlasmidRegex: Record<string,number> = {}
     shownPlasmidRegexUpdate = new Subject<void>();
 
+    priorityPattern: Record<string, number> = {}
+
     
     getLowFrequencyPlasmidPatterns(plasmid: string): void {
         const plasmidPatterns: string[] = [];
         let match;
+        let sequence;
         const priority: string[] = [];
 
         this.regexPatterns.forEach(pattern => {
@@ -42,9 +45,9 @@ export class RegexService {
                 match = regex.exec(plasmid)
                 this.shownPlasmidRegex[this.enzymeData[pattern]] = match!.index
                 priority.push(pattern)
+                this.priorityPattern[this.enzymeData[pattern]] = match![0].length
             }
         });
-        
         this.shownPlasmidRegexUpdate.next();
         this.combinedPlasmidRegexList = priority.concat(plasmidPatterns)
         this.combinedPlasmidRegex = new RegExp(priority.concat(plasmidPatterns).join('|'), 'g');

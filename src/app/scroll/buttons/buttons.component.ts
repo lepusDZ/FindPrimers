@@ -19,11 +19,6 @@ export class ButtonsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription.add(
-      this.buttonService.ORFbuttons.subscribe((buttons: string[]) => { 
-        this.ORFbuttons = buttons;
-      })
-    );
-    this.subscription.add(
       this.buttonService.RSbuttons.subscribe((buttons: string[]) => { 
         this.RSbuttons = buttons;
       })
@@ -31,14 +26,10 @@ export class ButtonsComponent implements OnInit, OnDestroy {
   }
 
   drop(event: CdkDragDrop<string[]>) {
-    if (event.container.id === event.previousContainer.id) {
-      if (event.container.id === "ORF-drag") {
-        moveItemInArray(this.ORFbuttons, event.previousIndex, event.currentIndex);
-      } else {
+    if (event.container.id === event.previousContainer.id) {  
         moveItemInArray(this.RSbuttons, event.previousIndex, event.currentIndex);
-      }
     } else {
-      if (event.container.id === "ORF-drag" && event.previousContainer.id === "ORF-drop") {
+      if (event.container.id === "RS-drag" && event.previousContainer.id === "ORF-drop") {
         this.buttonService.moveDroppedToORF(event.previousIndex);
       } else if (event.container.id === "RS-drag" && event.previousContainer.id === "RS-drop") {
         this.buttonService.moveDroppedToRS(event.previousIndex);

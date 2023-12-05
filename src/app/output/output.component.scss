@@ -1,0 +1,9 @@
+@import '../main-page/form/form.component.scss';
+
+.formHolder {
+    height: 50%
+}
+
+::ng-deep .mat-mdc-snack-bar-label {
+    text-align: center;
+}
