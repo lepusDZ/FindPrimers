@@ -16,6 +16,7 @@ export class DragDropComponent {
 
   constructor(protected buttonService: ButtonService, private router: Router) { }
 
+  // dynamically displays the buttons
   ngOnInit() {
     this.subscription.add(
       this.buttonService.droppedORF.subscribe((buttons: string[]) => {
@@ -30,6 +31,7 @@ export class DragDropComponent {
   }
 
   drop(event: CdkDragDrop<string[]>) {
+    // if moved in the same container change the index
     if (event.container.id === event.previousContainer.id) {
       if (event.container.id === "ORF-drop") {
         moveItemInArray(this.ORFbuttons, event.previousIndex, event.currentIndex);
@@ -37,6 +39,8 @@ export class DragDropComponent {
         moveItemInArray(this.RSbuttons, event.previousIndex, event.currentIndex);
       }
     } else {
+      // moves the button to the list accordingly to the area where it was dropped
+      // orf-drop is rs1 drop and rs is rs2 drop
       if (event.container.id === "ORF-drop" && event.previousContainer.id === "RS-drag") {
         this.buttonService.moveORFToDropped(event.previousIndex);
       } else if (event.container.id === "RS-drop" && event.previousContainer.id === "RS-drag") {

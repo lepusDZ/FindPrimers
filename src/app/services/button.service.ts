@@ -21,17 +21,18 @@ export class ButtonService {
 
     RSpositions: Record<string,number> = {};
 
+
     constructor(private regexService: RegexService, private inputService: InputService) {
+      // Takes the button values from the shownPlasmidRegex
       this.regexService.shownPlasmidRegexUpdate.subscribe(() => {
         this.updateRSButtons();
       });
     }
 
+  
   private updateRSButtons(): void {
-    // Update RSsubject with the keys from shownPlasmidRegex
     this.RSpositions = this.regexService.shownPlasmidRegex
     this.RSsubject.next(Object.keys(this.RSpositions));
-    console.log(this.RSpositions)
   }
 
     moveORFToDropped(index: number) {
@@ -74,8 +75,9 @@ export class ButtonService {
         }
     }
 
-    
-    moveDroppedToORF(index: number) {
+
+  // Moves the button from Dropped buttons back
+  moveDroppedToORF(index: number) {
   const currentRSButtons = this.RSsubject.value;
   const currentDroppedORF = this.droppedORFsubject.value;
 
@@ -88,6 +90,7 @@ export class ButtonService {
   }
 }
 
+// Moves the button from Dropped buttons back
 moveDroppedToRS(index: number) {
   const currentRSButtons = this.RSsubject.value;
   const currentDroppedRS = this.droppedRSsubject.value;
@@ -101,7 +104,7 @@ moveDroppedToRS(index: number) {
   }
 }
 
-
+  // Calculates output for the last page
   calculateOutput(rs1:string, rs2:string) {
     let rs1position:number = this.RSpositions[rs1];
     let rs2position:number = this.RSpositions[rs2];

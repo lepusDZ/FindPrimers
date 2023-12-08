@@ -82,6 +82,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     height: 100vh;
 }
 
+.error {
+  background: rgb(7, 20, 80);
+  background: radial-gradient(circle, #23294e 0%, #064645 100%);
+}
+
 
 .highlight-container {
   display: inline-block;

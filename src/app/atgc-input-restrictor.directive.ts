@@ -4,13 +4,18 @@ import { Directive, HostListener, ElementRef, Renderer2, Output, EventEmitter } 
   selector: '[appAtgcInputRestrictor]'
 })
 export class AtgcInputRestrictorDirective {
-  private allowedChars = new Set(['a', 't', 'g', 'c', 'A', 'T', 'G', 'C']);
+  private allowedChars = new Set(['a', 't', 'g', 'c', 'A', 'T', 'G', 'C', 'Backspace']);
   @Output() pasteEvent = new EventEmitter<void>();
 
   constructor(private el: ElementRef, private renderer: Renderer2) { }
 
-  @HostListener('keypress', ['$event'])
+  @HostListener('keydown', ['$event'])
   onKeyPress(event: KeyboardEvent) {
+    // Allow CTRL+V (paste), CTRL+C (copy), etc.
+    if (event.ctrlKey || event.metaKey) {
+      return;
+    }
+
     if (!this.allowedChars.has(event.key)) {
       event.preventDefault();
       this.addErrorEffect();

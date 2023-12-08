@@ -1,7 +1,6 @@
 import { Component, OnInit, HostListener, ElementRef, ViewChild, AfterViewInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { InputService } from '../../services/input.service';
 import { RegexService } from '../../services/regex.service';
-import { ButtonService } from '../../services/button.service';
 
 @Component({
   selector: 'app-plasmid-scroll',
@@ -40,17 +39,22 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
 
   labels: any[] = [];
 
-  constructor(private inputService: InputService, private regexService: RegexService, private buttonService: ButtonService, private cdr: ChangeDetectorRef) { };
+  constructor(private inputService: InputService, private regexService: RegexService, private cdr: ChangeDetectorRef) { };
 
   ngOnInit(): void {
+    // assigns values from input
     this.outer = this.inputService.firstInput;
     this.inner = this.inputService.processedInput;
-
     this.reversedPlasmidComplement = this.inputService.reversedInput
+
+    // triggers the function inside the regex service to get
+    // the enzyme patterns to display
     this.regexService.plasmid = this.outer
     this.regexService.getLowFrequencyPlasmidPatterns(this.outer)
+
     this.stringLength = this.outer.length
 
+    // show ORFs
     this.orfs = this.regexService.highlightOrfsWithCaseVerbose(this.outer, this.inputService.pORFmin, this.inputService.pORFmax, 0)
     this.orfsR = this.regexService.highlightOrfsWithCaseVerbose(this.reversedPlasmidComplement, this.inputService.pORFmin, this.inputService.pORFmax, 1)
     
@@ -61,6 +65,7 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
     this.calculateLabelPositions();
   }
 
+  // optimization for labels
   trackByFn(item: any): number {
     return item.id; 
   }
@@ -69,6 +74,8 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
     this.cdr.markForCheck()
   }
 
+  // calculates the position of the tspan objects with the highlight class
+  // and shows the labels above them
   calculateLabelPositions(): void {
     requestAnimationFrame(() => {
       const textElements = this.scrollElement.nativeElement.querySelectorAll('tspan.highlight');
@@ -126,6 +133,7 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
     }
   }
 
+// allows scrolling only when over the svg
   @HostListener('mouseover')
   onMouseOver(): void {
     this.isScrolling = true;

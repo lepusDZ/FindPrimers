@@ -32,6 +32,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { OutputComponent } from './output/output.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ErrorpageComponent } from './errorpage/errorpage.component';
 
 
 
@@ -59,7 +60,8 @@ export class SafeHtmlPipe implements PipeTransform {
     LinearScrollComponent,
     DragDropComponent,
     SafeHtmlPipe,
-    OutputComponent
+    OutputComponent,
+    ErrorpageComponent
   ],
   imports: [
     BrowserModule,

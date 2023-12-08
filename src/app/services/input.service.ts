@@ -39,15 +39,19 @@ export class InputService {
     }
 
     saveFirstInput(value: string): void {
-        this.firstInput = value.toUpperCase();
-        this.regexService.plasmid = this.firstInput; 
-        this.processedInput = this.translateValue(this.firstInput);
-        this.reversedInput = this.processedInput.split("").reverse().join("");
+        if (value) {            
+            this.firstInput = value.toUpperCase();
+            this.regexService.plasmid = this.firstInput; 
+            this.processedInput = this.translateValue(this.firstInput);
+            this.reversedInput = this.processedInput.split("").reverse().join("");
+        }
     }
 
     setSecondInput(value: string): void {
-        this.secondInputSubject.next(value.toUpperCase())
-        this.processedSecondSubject.next(this.translateValue(value.toUpperCase()))
+        if (value) {
+            this.secondInputSubject.next(value.toUpperCase())
+            this.processedSecondSubject.next(this.translateValue(value.toUpperCase()))
+        }
     }
     
     saveSecondInput(value:string): void {
