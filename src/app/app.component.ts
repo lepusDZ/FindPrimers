@@ -14,6 +14,8 @@ export class AppComponent {
       if (event instanceof NavigationEnd) {
         if (event.url.includes('/scroll')) {
           this.backgroundClass = 'background-scroll';
+        } else if (event.url.includes('/error')) {
+          this.backgroundClass = 'error';
         } else {
           this.backgroundClass = 'background-default';
         }

@@ -11,6 +11,9 @@ export class ScrollComponent implements OnInit {
 
   @ViewChild(PlasmidScrollComponent) plasmid! : PlasmidScrollComponent;
 
+
+  // when button from button component is clicked, this function triggers and changed
+  // the displayed plasmid slice
   changePosition(value:number) {
     if (value > 150) {
       this.plasmid.start = value - 45;
@@ -26,7 +29,7 @@ export class ScrollComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Check if 'blurred' value is stored in localStorage
+    // Check if 'blurred' value is stored in localStorage (user has already seen the page)
     const storedBlurred = localStorage.getItem('blurred');
     if (storedBlurred !== null) {
       this.blurred = storedBlurred === 'true'; // Convert the string back to a boolean

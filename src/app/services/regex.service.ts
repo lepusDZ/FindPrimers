@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import enzymeData from './assets/enzyme-data.json';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root',
@@ -26,11 +27,11 @@ export class RegexService {
 
     priorityPattern: Record<string, number> = {}
 
-    
+    constructor(private router: Router) {}
+
     getLowFrequencyPlasmidPatterns(plasmid: string): void {
         const plasmidPatterns: string[] = [];
         let match;
-        let sequence;
         const priority: string[] = [];
 
         this.regexPatterns.forEach(pattern => {
@@ -53,10 +54,12 @@ export class RegexService {
         this.combinedPlasmidRegex = new RegExp(priority.concat(plasmidPatterns).join('|'), 'g');
         
         if (this.combinedLinearRegex.toString() === '/(?:)/g') {
+            this.router.navigate(['/error', 'Plasmid has no regexes'])
             throw new Error('Plasmid has no regexes');
         }
         if (Object.keys(this.shownPlasmidRegex).length === 0) {
-            throw new Error('There is no place to insern linear into the plasmid')
+            this.router.navigate(['/error', 'There is no place to insert linear in the plasmid'])
+            throw new Error('There is no place to insert linear in the plasmid')
         }
     }
 
@@ -156,6 +159,7 @@ export class RegexService {
     
     highlightOrfsWithCaseVerbose(sequence:string, minSize:number, maxSize:number, type:number) {
         const stopCodons = new Set(["TAA", "TAG", "TGA"]);
+        // Create 3 Arrays to prevent overlapping
         let coloredSeq0 = Array(sequence.length).fill(' ');
         let coloredSeq1 = Array(sequence.length).fill(' ');
         let coloredSeq2 = Array(sequence.length).fill(' ');
@@ -194,6 +198,7 @@ export class RegexService {
             }
         }
 
+        // Checks whether ORF is reverse or not
         if (type === 0) {
             return [coloredSeq0.join('').replace(/[ATGC]/g, '>'), 
             coloredSeq1.join('').replace(/[ATGC]/g, '>'), 

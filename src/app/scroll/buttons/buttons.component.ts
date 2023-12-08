@@ -29,6 +29,7 @@ export class ButtonsComponent implements OnInit, OnDestroy {
     if (event.container.id === event.previousContainer.id) {  
         moveItemInArray(this.RSbuttons, event.previousIndex, event.currentIndex);
     } else {
+      // allows the buttons to be moved back
       if (event.container.id === "RS-drag" && event.previousContainer.id === "ORF-drop") {
         this.buttonService.moveDroppedToORF(event.previousIndex);
       } else if (event.container.id === "RS-drag" && event.previousContainer.id === "RS-drop") {
@@ -37,6 +38,7 @@ export class ButtonsComponent implements OnInit, OnDestroy {
     }
   }
 
+  // on click moves the button back
   onClickRS(element:string) {
     this.position.emit(this.buttonService.RSpositions[element])
   }

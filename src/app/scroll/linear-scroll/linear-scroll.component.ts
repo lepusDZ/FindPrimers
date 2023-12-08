@@ -41,14 +41,19 @@ export class LinearScrollComponent {
   constructor(private inputService: InputService, private regexService: RegexService) { };
 
   ngOnInit(): void {
+    // assigns values from input
     this.outer = this.inputService.secondInput;
     this.inner = this.inputService.processedInput;
     this.reversedLinearComplement = this.inputService.reversedInput
     
+    // triggers the function inside the regex service to get
+    // the enzyme patterns to display
     this.regexService.linear = this.outer;
     this.regexService.getLowFrequencyLinearPatterns(this.outer)
+
     this.stringLength = this.outer.length
 
+    // show ORFs
     this.orfs = this.regexService.highlightOrfsWithCaseVerbose(this.outer, this.inputService.lORFmin, this.inputService.lORFmax, 0)
     this.orfsR = this.regexService.highlightOrfsWithCaseVerbose(this.reversedLinearComplement, this.inputService.lORFmin, this.inputService.lORFmax, 1)
 
@@ -85,6 +90,7 @@ export class LinearScrollComponent {
     }
   }
 
+  // blocks scrolling if not mouseover the div
   @HostListener('mouseover')
   onMouseOver(): void {
     this.isScrolling = true;

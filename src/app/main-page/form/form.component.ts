@@ -46,6 +46,7 @@ export class FormComponent {
         this.inputService.pORFmin = this.min
         this.inputService.pORFmax = this.max
 
+        // resets the form and now linear must be entered
         this.isFirstInputSubmitted = true;
         this.label = "Paste the Linear Sequence"
       } else {
@@ -64,6 +65,9 @@ export class FormComponent {
     }
   }
 
+
+  // if the text is pasted for the first time shows
+  // that it is filtered
   handlePaste(): void {
     if (this.isFirstPaste) {
       this.isFirstPaste = false;
