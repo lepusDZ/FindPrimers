@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-errorpage',
@@ -10,12 +10,19 @@ export class ErrorpageComponent implements OnInit, OnDestroy {
   message:string = "";
   private sub:any;
   
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private router: Router) { }
   
   ngOnInit(): void {
     this.sub = this.route.params.subscribe(params => {
       this.message = params['message'];
     });
+  }
+
+  refresh(): void {
+    this.router.navigate(['/'])
+      .then(() => {
+        window.location.reload();
+      });
   }
 
   ngOnDestroy(): void {

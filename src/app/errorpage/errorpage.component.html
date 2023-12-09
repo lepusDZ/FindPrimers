@@ -6,9 +6,9 @@
 
             <h2> {{ message }} </h2>
 
-            <div id="home" class="button">
-                <a routerLink="/" style="text-decoration: none; color:#FCA671;"><h3>GO BACK</h3></a>
-            </div>
+            <a (click)="refresh()" style="text-decoration: none; color:#FCA671; cursor: pointer;"><div id="home" class="button">
+                <h3>GO BACK</h3>
+            </div></a>
         </div>
 
     </div>
