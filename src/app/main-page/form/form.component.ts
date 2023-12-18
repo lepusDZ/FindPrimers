@@ -3,7 +3,8 @@ import { NgForm } from '@angular/forms';
 import { InputService } from '../../services/input.service';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
-import { RegexService } from '../../services/regex.service';
+import { vectorExample,linearExample } from './example';
+
 
 @Component({
   selector: 'app-form',
@@ -70,6 +71,16 @@ export class FormComponent {
         max: this.max
       });
     }
+  }
+
+  onExample() {
+    if (!this.isFirstInputSubmitted) {
+      this.input = vectorExample;
+      this.onInputChange(this.input);
+    } else if (!this.isSecondInputSubmitted) {
+      this.input = linearExample;
+      this.onInputChange(this.input);
+    } 
   }
 
 

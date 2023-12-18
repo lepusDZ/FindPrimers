@@ -19,18 +19,22 @@
     align-items: center;
 }
 
+.header-container {
+    display: flex;
+    justify-content: center;
+}
+
+
 button[disabled] {
     .mat-mdc-button-persistent-ripple {
             background-color: white;
         }
 }
 
-button {
+.submit {
     width: 100%;
     height: 3rem;
-    /* Adjust the height as needed */
     font-size: 1.2rem;
-    /* Adjust the font size as needed */
 }
 textarea {
     resize: none; // Optional: To prevent users from resizing the textarea
