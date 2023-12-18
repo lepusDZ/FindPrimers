@@ -9,14 +9,23 @@
     (click)="stopScroll()"
     (mousedown)="stopScroll()"
     (mouseup)="stopScroll()"
-    #scrollElement
-        >
-        <g *ngFor="let label of labels; trackBy: trackByFn">
-                <line [attr.x1]="label.linestartX" [attr.y1]="label.linestartY" [attr.x2]="label.x" [attr.y2]="label.y"
-                    style="stroke:white; stroke-width: 0.1px;"></line>
+    #scrollElement>
+       <g *ngFor="let label of labels; trackBy: trackByFn">
+    <line [attr.x1]="label.linestartX" 
+          [attr.y1]="label.linestartY" 
+          [attr.x2]="label.x" 
+          [attr.y2]="label.y"
+          [style.stroke]="label.id" 
+          style="stroke-width: 0.1px;">
+    </line>
 
-            <text [attr.x]="label.x" [attr.y]="label.y" class="label">{{ label.text }}</text>
-        </g>
+    <text [attr.x]="label.x" 
+          [attr.y]="label.y" 
+          class="label" 
+          [style.fill]="label.id">
+        {{ label.text }}
+    </text>
+</g>
         <defs>
             <path id="halfOval" d="M -15,100 Q 100,50 205,95" fill="none" />
         </defs>
