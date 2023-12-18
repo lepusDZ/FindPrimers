@@ -18,19 +18,13 @@ export class LinearComponent implements OnInit, OnDestroy {
     this.subscription.add(this.inputService.secondInput$.pipe(
       debounceTime(0)
     ).subscribe(value => {
-      this.inputFromService = value.slice(0, 50);
-      if (value.length > 50) {
-        this.inputFromService += '....';
-      }
+      this.inputFromService = value.slice(0, 100);
     }));
 
     this.subscription.add(this.inputService.secondProcessed$.pipe(
       debounceTime(0)
     ).subscribe(value => {
-      this.processed = value.slice(0, 50);
-      if (value.length > 50) {
-        this.processed += '....';
-      }
+      this.processed = value.slice(0, 100);
     }));
   }
 

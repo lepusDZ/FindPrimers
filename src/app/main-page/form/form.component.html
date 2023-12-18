@@ -1,7 +1,13 @@
 <div class="container">
     <div class="formHolder bg-white m-3 shadow-lg">
-        <h2 class="text-center">{{ label }}</h2>
-        <form (ngSubmit)="onSubmit(f)" #f="ngForm" class="p-3">
+        <div class="header-container">
+            <h2 class="text-center me-2">{{ label }}</h2>
+            <button class="btn btn-secondary btn-sm" (click)="onExample()">Try an example</button>
+        </div>
+        <div class="d-flex justify-content-center align-center spinner" *ngIf="showSpinner">
+            <mat-spinner></mat-spinner>
+        </div>
+        <form (ngSubmit)="onSubmit(f)" #f="ngForm" class="p-3" *ngIf="!showSpinner">
             <mat-form-field style="width:100%;"
             appearance="outline" 
             hintLabel="Max 20000 characters"
@@ -17,9 +23,9 @@
                 maxlength="20000"
                 matInput
                 rows="13"
+                appAtgcInputRestrictor
                 [(ngModel)]="input"
                 (ngModelChange)="onInputChange($event)"
-                appAtgcInputRestrictor
                 (pasteEvent)="handlePaste()"
                 placeholder="{{placeholder}}"
                 required>
@@ -27,11 +33,11 @@
                 <mat-hint align="end">{{textarea.value.length}}/20000</mat-hint>
             </mat-form-field>
             <label for="mat-slider" class="d-flex justify-content-center">ORF range:</label>
-            <mat-slider min="100" max="20000" class="w-100 m-0" discrete>
+            <mat-slider min="0" max="20000" class="w-100 m-0" discrete>
                 <input value="100" matSliderStartThumb [(ngModel)]="min" name="min">
                 <input value="20000" matSliderEndThumb [(ngModel)]="max" name="max">
             </mat-slider>
-            <button mat-raised-button color="primary" class="shadow rounded" [disabled]="!isInputValid" [ngStyle]="">
+            <button mat-raised-button color="primary" class="shadow rounded submit" [disabled]="!isInputValid" [ngStyle]="">
                 <mat-icon>science</mat-icon>
                 Submit
             </button>

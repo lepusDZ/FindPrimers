@@ -1,25 +1,28 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { InputService } from '../../services/input.service';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
-import { RegexService } from '../../services/regex.service';
+import { vectorExample,linearExample } from './example';
+
 
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss']
 })
-export class FormComponent {
+export class FormComponent implements OnDestroy {
   input: string = '';
+  sanitizedInput: string = '';
   min: number = 100;
   max:number = 20000;
 
-  label: string = "Paste the Plasmid Sequence";
+  label: string = "Paste the Vector Sequence";
   placeholder: string = 'TTCTTGAAGACGAAAGGGCCTCGTGATACGCCTATTTTTATAGGTTAATGTCATGATAATAATGGTTTCTTAGACGT....';
 
   isFirstInputSubmitted: boolean = false;
   isSecondInputSubmitted: boolean = false;
+  showSpinner: boolean = false;
 
   tooltipNotAllowed: boolean = true;
   isFirstPaste: boolean = true; // Track if it's the first paste
@@ -29,14 +32,19 @@ export class FormComponent {
   constructor(private inputService: InputService, private cdr: ChangeDetectorRef, private router: Router) { }
 
   onInputChange(newValue: string): void {
+    // Sanitize the input right away
+    this.sanitizedInput = newValue.replace(/[^ATGCatgc]/g, '');
+
+    // Proceed with the sanitized value
     if (!this.isFirstInputSubmitted) {
-      this.inputService.setInput(newValue);
+      this.inputService.setInput(this.sanitizedInput);
     } else if (!this.isSecondInputSubmitted) {
-      this.inputService.setSecondInput(newValue);
+      this.inputService.setSecondInput(this.sanitizedInput);
     } else {
-      this.router.navigate(['/scroll']);
+      this.showSpinner = true;
     }
   }
+
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -48,14 +56,16 @@ export class FormComponent {
 
         // resets the form and now linear must be entered
         this.isFirstInputSubmitted = true;
-        this.label = "Paste the Linear Sequence"
+        this.label = "Paste the Insert Sequence"
       } else {
+        this.showSpinner = true;
         this.inputService.saveSecondInput(this.input);
 
         this.inputService.lORFmin = this.min
         this.inputService.lORFmax = this.max
 
         this.isSecondInputSubmitted = true;
+        this.router.navigate(['/scroll']);
       }
       
       form.resetForm({
@@ -63,6 +73,16 @@ export class FormComponent {
         max: this.max
       });
     }
+  }
+
+  onExample() {
+    if (!this.isFirstInputSubmitted) {
+      this.input = vectorExample;
+      this.onInputChange(this.input);
+    } else if (!this.isSecondInputSubmitted) {
+      this.input = linearExample;
+      this.onInputChange(this.input);
+    } 
   }
 
 
@@ -83,7 +103,21 @@ export class FormComponent {
 
   get isInputValid(): boolean {
     if (this.input) {
-      return this.input.length >= 500;
+      return this.sanitizedInput.length >= 500 || (this.sanitizedInput.length >= 1 && this.isFirstInputSubmitted);
     } return false;
+  }
+  
+  ngOnDestroy(): void {
+    
+    this.input = '';
+    this.sanitizedInput = '';
+    this.min = 100;
+    this.max = 20000;
+    this.isFirstInputSubmitted = false;
+    this.isSecondInputSubmitted = false;
+    this.showSpinner = false;
+    this.tooltipNotAllowed = true;
+    this.isFirstPaste = true;
+
   }
 }
