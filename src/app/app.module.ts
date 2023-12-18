@@ -33,6 +33,8 @@ import { OutputComponent } from './output/output.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ErrorpageComponent } from './errorpage/errorpage.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 
 
@@ -79,7 +81,8 @@ export class SafeHtmlPipe implements PipeTransform {
     DragDropModule,
     HttpClientModule,
     ClipboardModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -5,3 +5,9 @@ div {
     padding-right:1rem;
     font-size: 88%
 }
+.text-container {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}

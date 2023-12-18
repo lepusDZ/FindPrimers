@@ -12,14 +12,16 @@ import { RegexService } from '../../services/regex.service';
 })
 export class FormComponent {
   input: string = '';
+  sanitizedInput: string = '';
   min: number = 100;
   max:number = 20000;
 
-  label: string = "Paste the Plasmid Sequence";
+  label: string = "Paste the Vector Sequence";
   placeholder: string = 'TTCTTGAAGACGAAAGGGCCTCGTGATACGCCTATTTTTATAGGTTAATGTCATGATAATAATGGTTTCTTAGACGT....';
 
   isFirstInputSubmitted: boolean = false;
   isSecondInputSubmitted: boolean = false;
+  showSpinner: boolean = false;
 
   tooltipNotAllowed: boolean = true;
   isFirstPaste: boolean = true; // Track if it's the first paste
@@ -29,14 +31,17 @@ export class FormComponent {
   constructor(private inputService: InputService, private cdr: ChangeDetectorRef, private router: Router) { }
 
   onInputChange(newValue: string): void {
+    // Sanitize the input right away
+    this.sanitizedInput = newValue.replace(/[^ATGCatgc]/g, '');
+
+    // Proceed with the sanitized value
     if (!this.isFirstInputSubmitted) {
-      this.inputService.setInput(newValue);
+      this.inputService.setInput(this.sanitizedInput);
     } else if (!this.isSecondInputSubmitted) {
-      this.inputService.setSecondInput(newValue);
-    } else {
-      this.router.navigate(['/scroll']);
-    }
+      this.inputService.setSecondInput(this.sanitizedInput);
+    } 
   }
+
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -48,7 +53,7 @@ export class FormComponent {
 
         // resets the form and now linear must be entered
         this.isFirstInputSubmitted = true;
-        this.label = "Paste the Linear Sequence"
+        this.label = "Paste the Insert Sequence"
       } else {
         this.inputService.saveSecondInput(this.input);
 
@@ -56,6 +61,8 @@ export class FormComponent {
         this.inputService.lORFmax = this.max
 
         this.isSecondInputSubmitted = true;
+        this.showSpinner = true;
+        this.router.navigate(['/scroll']);
       }
       
       form.resetForm({
@@ -83,7 +90,7 @@ export class FormComponent {
 
   get isInputValid(): boolean {
     if (this.input) {
-      return this.input.length >= 500;
+      return this.sanitizedInput.length >= 500 || (this.sanitizedInput.length >= 1 && this.isFirstInputSubmitted);
     } return false;
   }
 }

@@ -11,8 +11,13 @@
    border-radius: 15px;
    width: 90%;
    padding: 5%;
+   height: 85%
 }
 
+.spinner {
+    height: 90%;
+    align-items: center;
+}
 
 button[disabled] {
     .mat-mdc-button-persistent-ripple {

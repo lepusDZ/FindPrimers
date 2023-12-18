@@ -6,13 +6,17 @@ import { Directive, HostListener, ElementRef, Renderer2, Output, EventEmitter } 
 export class AtgcInputRestrictorDirective {
   private allowedChars = new Set(['a', 't', 'g', 'c', 'A', 'T', 'G', 'C']);
   @Output() pasteEvent = new EventEmitter<void>();
+
   constructor(private el: ElementRef, private renderer: Renderer2) { }
 
   @HostListener('input', ['$event']) onInputChange(event: any) {
-    const initalValue = event.target.value;
-    event.target.value = initalValue.replace(/[^ATGCatgc]/g, '');
-    if (initalValue !== event.target.value) {
-      event.stopPropagation();
+    const initialValue = event.target.value;
+    const newValue = initialValue.replace(/[^ATGCatgc]/g, '');
+
+    if (initialValue !== newValue) {
+      event.preventDefault(); // Prevent the default input event
+      event.stopPropagation(); // Stop the propagation of the event
+      this.renderer.setProperty(this.el.nativeElement, 'value', newValue); // Set the new value without invalid characters
       this.addErrorEffect();
     }
   }
