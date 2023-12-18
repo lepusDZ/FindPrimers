@@ -33,15 +33,17 @@ export class FormComponent implements OnDestroy {
 
   onInputChange(newValue: string): void {
     // Sanitize the input right away
-    this.sanitizedInput = newValue.replace(/[^ATGCatgc]/g, '');
-
-    // Proceed with the sanitized value
-    if (!this.isFirstInputSubmitted) {
-      this.inputService.setInput(this.sanitizedInput);
-    } else if (!this.isSecondInputSubmitted) {
-      this.inputService.setSecondInput(this.sanitizedInput);
-    } else {
-      this.showSpinner = true;
+    if (newValue) {
+      this.sanitizedInput = newValue.replace(/[^ATGCatgc]/g, '');
+    
+      // Proceed with the sanitized value
+      if (!this.isFirstInputSubmitted) {
+        this.inputService.setInput(this.sanitizedInput);
+      } else if (!this.isSecondInputSubmitted) {
+        this.inputService.setSecondInput(this.sanitizedInput);
+      } else {
+        this.showSpinner = true;
+      }
     }
   }
 
