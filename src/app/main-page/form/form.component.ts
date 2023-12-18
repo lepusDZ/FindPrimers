@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { InputService } from '../../services/input.service';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -11,7 +11,7 @@ import { vectorExample,linearExample } from './example';
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss']
 })
-export class FormComponent {
+export class FormComponent implements OnDestroy {
   input: string = '';
   sanitizedInput: string = '';
   min: number = 100;
@@ -40,7 +40,9 @@ export class FormComponent {
       this.inputService.setInput(this.sanitizedInput);
     } else if (!this.isSecondInputSubmitted) {
       this.inputService.setSecondInput(this.sanitizedInput);
-    } 
+    } else {
+      this.showSpinner = true;
+    }
   }
 
 
@@ -56,13 +58,13 @@ export class FormComponent {
         this.isFirstInputSubmitted = true;
         this.label = "Paste the Insert Sequence"
       } else {
+        this.showSpinner = true;
         this.inputService.saveSecondInput(this.input);
 
         this.inputService.lORFmin = this.min
         this.inputService.lORFmax = this.max
 
         this.isSecondInputSubmitted = true;
-        this.showSpinner = true;
         this.router.navigate(['/scroll']);
       }
       
@@ -103,5 +105,19 @@ export class FormComponent {
     if (this.input) {
       return this.sanitizedInput.length >= 500 || (this.sanitizedInput.length >= 1 && this.isFirstInputSubmitted);
     } return false;
+  }
+  
+  ngOnDestroy(): void {
+    
+    this.input = '';
+    this.sanitizedInput = '';
+    this.min = 100;
+    this.max = 20000;
+    this.isFirstInputSubmitted = false;
+    this.isSecondInputSubmitted = false;
+    this.showSpinner = false;
+    this.tooltipNotAllowed = true;
+    this.isFirstPaste = true;
+
   }
 }
