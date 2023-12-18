@@ -83,8 +83,10 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
         const textElement = element as SVGTextElement; 
         const bbox = textElement.getBBox();
         const enzymeClass = textElement.classList.value.split(' ')[1];
+        const id = ((textElement.id == 'red') ? 'red' : 'white');
         // Calculate x, y based on bbox; may need to adjust if it's not positioning correctly
         return {
+          id: id,
           x: bbox.x + bbox.width%2+1,
           y: bbox.y - bbox.height, // Position above the tspan
           text: enzymeClass,

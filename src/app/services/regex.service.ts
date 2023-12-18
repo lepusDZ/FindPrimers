@@ -17,15 +17,15 @@ export class RegexService {
     regexPatterns = Object.keys(this.enzymeData);
 
     combinedPlasmidRegex!: RegExp;
-    combinedPlasmidRegexList: string[] = []
+    combinedPlasmidRegexList: string[] = [] // regexes found in the plasmid sorted from priority to all other ones
 
     combinedLinearRegex!: RegExp;
     combinedLinearRegexList: string[] = []
 
-    shownPlasmidRegex: Record<string,number> = {}
+    shownPlasmidRegex: Record<string,number> = {} // regexes that are shown in the buttons (low frequency regexes)
     shownPlasmidRegexUpdate = new Subject<void>();
 
-    priorityPattern: Record<string, number> = {}
+    priorityPattern: Record<string, number> = {} // same regex but it's a dictionary label : length
 
     constructor(private router: Router) {}
 
@@ -42,24 +42,25 @@ export class RegexService {
             if (plasmidMatchCount > 1 && plasmidMatchCount < 5) {
                 plasmidPatterns.push(pattern);
             }
-            if (plasmidMatchCount == 1) { //&& !this.combinedLinearRegex.source.includes(pattern)
+            if (plasmidMatchCount == 1 && !this.combinedLinearRegex.source.includes(pattern)) { 
                 match = regex.exec(plasmid)
                 this.shownPlasmidRegex[this.enzymeData[pattern]] = match!.index
                 priority.push(pattern)
                 this.priorityPattern[this.enzymeData[pattern]] = match![0].length
             }
         });
+        this.sortShownPlasmidRegex()
         this.shownPlasmidRegexUpdate.next();
         this.combinedPlasmidRegexList = priority.concat(plasmidPatterns)
         this.combinedPlasmidRegex = new RegExp(priority.concat(plasmidPatterns).join('|'), 'g');
         
         if (this.combinedLinearRegex.toString() === '/(?:)/g') {
-            this.router.navigate(['/error', 'Plasmid has no regexes'])
-            throw new Error('Plasmid has no regexes');
+            this.router.navigate(['/error', 'Vector sequence has no regexes'])
+            throw new Error('Vector sequence has no regexes');
         }
         if (Object.keys(this.shownPlasmidRegex).length === 0) {
-            this.router.navigate(['/error', 'There is no place to insert linear in the plasmid'])
-            throw new Error('There is no place to insert linear in the plasmid')
+            this.router.navigate(['/error', 'There is no place to insert linear sequence in the vector sequence'])
+            throw new Error('There is no place to insert linear sequence in the vector sequence')
         }
     }
 
@@ -103,7 +104,11 @@ export class RegexService {
 
                 if (match) {
                     const enzymeClass = this.enzymeData[pattern];
-                    svgText += `<tspan class="highlight ${enzymeClass}">${inputText[i]}</tspan>`;
+                    if (this.shownPlasmidRegex.hasOwnProperty(enzymeClass)) {
+                        svgText += `<tspan class="highlight ${enzymeClass}" id="red">${inputText[i]}</tspan>`;
+                    } else {
+                        svgText += `<tspan class="highlight ${enzymeClass}">${inputText[i]}</tspan>`;
+                    }
                     matchFound = true;
                     break; // Stop checking other patterns if a match is found
                 }
@@ -115,6 +120,8 @@ export class RegexService {
             }
         }
 
+        console.log(this.combinedPlasmidRegex)
+        console.log(this.combinedPlasmidRegexList)
         return svgText;
     }
 
@@ -210,4 +217,14 @@ export class RegexService {
         }
     }
 
+
+    sortShownPlasmidRegex(): void {
+        let sortedArray = Object.entries(this.shownPlasmidRegex);
+        sortedArray.sort((a, b) => a[1] - b[1]);
+
+        this.shownPlasmidRegex = sortedArray.reduce<Record<string, number>>((obj, [key, value]) => {
+            obj[key] = value;
+            return obj;
+        }, {} as Record<string, number>); 
+    }
 }
