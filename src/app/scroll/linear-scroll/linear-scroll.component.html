@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-center align-items-center" style="height: 100%;" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()" (mousedown)="startScroll('left')"
+<div class="d-flex justify-content-center align-items-center mt-3" style="height: 100%;" (mouseover)="onMouseOver()" (mouseout)="onMouseOut()" (mousedown)="startScroll('left')"
         (mouseup)="startScroll('right')" 
         (click)="stopScroll()"
         (mousedown)="stopScroll()"
@@ -14,9 +14,9 @@
         <div class="text-display whitespace" [innerHTML]="rOrfsShown2 | safeHtml"></div>
         <div class="text-display whitespace" [innerHTML]="rOrfsShown3 | safeHtml"></div>
         <div class="button-container">
-            <button (mouseenter)="startScroll('left')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll Left</button>
-            <button (mouseenter)="startScroll('right')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll
-                Right</button>
+            <mat-slider style="width:100%;" discrete min="0" max="{{ stringLength - 50 }}">
+                <input matSliderThumb [(ngModel)]="start" name="start" (input)="onSliderChange()">
+            </mat-slider>
         </div>
     </div>
     

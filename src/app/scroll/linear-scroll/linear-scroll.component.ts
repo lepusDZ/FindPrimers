@@ -17,7 +17,7 @@ export class LinearScrollComponent {
 
 
   start: number = 0;
-  end: number = 150; // Initially display first 50 characters
+  end: number = this.start + 50; // Initially display first 50 characters
 
   stringLength: number = 600; // Default string length
 
@@ -118,7 +118,7 @@ export class LinearScrollComponent {
   scrollLeft(): void {
     if (this.start > 0) {
       this.start--;
-      this.end = Math.min(this.start + 50, this.stringLength);
+      this.end = this.start + 50;
       this.updateShownText();
     }
   }
@@ -126,8 +126,15 @@ export class LinearScrollComponent {
   scrollRight(): void {
     if (this.end < this.stringLength) {
       this.start++;
-      this.end = Math.min(this.start + 50, this.stringLength);
+      this.end = this.start + 50;
       this.updateShownText();
     }
+  }
+
+  onSliderChange(): void {
+    this.end = this.start + 50; // Assuming you want to show 50 characters after the start
+    this.updateShownText();
+    console.log(this.start)
+    console.log(this.end)
   }
 }
