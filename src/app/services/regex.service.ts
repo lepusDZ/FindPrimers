@@ -55,8 +55,8 @@ export class RegexService {
         this.combinedPlasmidRegex = new RegExp(priority.concat(plasmidPatterns).join('|'), 'g');
         
         if (this.combinedLinearRegex.toString() === '/(?:)/g') {
-            this.router.navigate(['/error', 'Vector sequence has no regexes'])
-            throw new Error('Vector sequence has no regexes');
+            this.router.navigate(['/error', 'Vector sequence has no restriction cloning sites'])
+            throw new Error('Vector sequence has no restriction cloning sites');
         }
         if (Object.keys(this.shownPlasmidRegex).length === 0) {
             this.router.navigate(['/error', 'There is no place to insert linear sequence in the vector sequence'])
@@ -120,8 +120,6 @@ export class RegexService {
             }
         }
 
-        console.log(this.combinedPlasmidRegex)
-        console.log(this.combinedPlasmidRegexList)
         return svgText;
     }
 
