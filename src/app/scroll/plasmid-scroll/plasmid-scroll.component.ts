@@ -38,6 +38,20 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   rOrfsShown3: string = '';
 
   labels: any[] = [];
+  
+  speedSettings = [
+    { display: 'x1', value: 40 },
+    { display: 'x2', value: 25},
+    { display: 'x5', value: 10 },
+    { display: 'x10', value: 1 },
+
+  ];
+
+  currentSpeedIndex = 0;
+  mouseIndex = -1;
+
+  speed: number = this.speedSettings[0].value;
+  mouseSpeed: number = this.speedSettings[this.speedSettings.length - 1].value;
 
   constructor(private inputService: InputService, private regexService: RegexService, private cdr: ChangeDetectorRef) { };
 
@@ -60,6 +74,23 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
     
     this.updateShownText();
   }
+
+
+  get currentSpeedDisplay() {
+    return this.speedSettings[this.currentSpeedIndex].display;
+  }
+
+  changeSpeed() {
+    this.currentSpeedIndex = (this.currentSpeedIndex + 1) % this.speedSettings.length;
+    this.speed = this.speedSettings[this.currentSpeedIndex].value;
+
+    this.mouseIndex = (this.mouseIndex - 1 + this.speedSettings.length) % this.speedSettings.length;
+    this.mouseSpeed = this.speedSettings[this.mouseIndex].value;
+
+    console.log(this.speed)
+    console.log(this.mouseSpeed)
+  }
+
   
   ngAfterViewInit(): void {
     this.calculateLabelPositions();
@@ -128,9 +159,9 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
     if (this.isScrolling && this.scrollElement.nativeElement.contains(event.target)) {
       event.preventDefault();
       if (event.deltaY > 0) {
-        this.scrollRight();
+          this.scrollRight();
       } else {
-        this.scrollLeft();
+          this.scrollLeft();
       }
     }
   }
@@ -147,10 +178,9 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   }
 
   startScroll(direction: 'left' | 'right'): void {
-    this.stopScroll();
     this.scrollInterval = setInterval(() => {
       direction === 'left' ? this.scrollLeft() : this.scrollRight();
-    }, 100); // Adjust interval for speed
+    }, this.speed); // Adjust interval for speed
   }
 
   stopScroll(): void {
@@ -161,7 +191,6 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   }
 
   scrollLeft(): void {
-    // When scrolling left, decrement start and end
     this.start = (this.start - 1 + this.stringLength) % this.stringLength;
     this.end = (this.end - 1 + this.stringLength) % this.stringLength;
 
@@ -170,7 +199,6 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   }
 
   scrollRight(): void {
-    // When scrolling right, increment start and end
     this.start = (this.start + 1) % this.stringLength;
     this.end = (this.end + 1) % this.stringLength;
 
