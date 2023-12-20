@@ -2,7 +2,9 @@
     <div class="col-md-12">
         <h5 class="text-white pt-2">Restriction cloning sites available</h5>
         <div class="d-flex flex-column scrollable" cdkScrollable cdkDropList id="RS-drag"
-            [cdkDropListConnectedTo]="['ORF-drop', 'RS-drop']" (cdkDropListDropped)="drop($event)">
+            [cdkDropListConnectedTo]="['ORF-drop', 'RS-drop']" 
+            (cdkDropListDropped)="drop($event)"
+             cdkDropListSortingDisabled>
             <div *ngFor="let RS of RSbuttons; let i = index" class="d-grid gap-2">
                 <div cdkDrag class="btn btn-light mt-3 p-2 me-2" (click)="onClickRS(RS)">{{ RS }}</div>
             </div>

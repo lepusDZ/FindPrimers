@@ -105,7 +105,7 @@ export class FormComponent implements OnDestroy {
 
   get isInputValid(): boolean {
     if (this.input) {
-      return this.sanitizedInput.length >= 500 || (this.sanitizedInput.length >= 1 && this.isFirstInputSubmitted);
+      return this.sanitizedInput.length >= 500 || (this.sanitizedInput.length >= 20 && this.isFirstInputSubmitted);
     } return false;
   }
   

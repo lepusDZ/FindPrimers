@@ -35,12 +35,12 @@ export class ButtonService {
     this.RSsubject.next(Object.keys(this.RSpositions));
   }
 
-    moveORFToDropped(index: number) {
+    copyORFToDropped(index: number) {
         const currentRSButtons = this.RSsubject.value;
         const currentDroppedORF = this.droppedORFsubject.value;
 
       if (index >= 0 && index < currentRSButtons.length) {
-        const movedORF = currentRSButtons.splice(index, 1)[0];
+        const movedORF = currentRSButtons[index];
 
             // If there's a value in the dropped list, move it back to ORFbuttons
             if (currentDroppedORF.length > 0) {
@@ -50,17 +50,16 @@ export class ButtonService {
 
             currentDroppedORF.push(movedORF);
 
-            this.RSsubject.next(currentRSButtons);
             this.droppedORFsubject.next(currentDroppedORF);
         }
     }
 
-    moveRSToDropped(index: number) {
+    copyRSToDropped(index: number) {
         const currentRSButtons = this.RSsubject.value;
         const currentDroppedRS = this.droppedRSsubject.value;
 
         if (index >= 0 && index < currentRSButtons.length) {
-            const movedRS = currentRSButtons.splice(index, 1)[0];
+            const movedRS = currentRSButtons[index];
 
             // If there's a value in the dropped list, move it back to RSbuttons
             if (currentDroppedRS.length > 0) {
@@ -70,7 +69,6 @@ export class ButtonService {
 
             currentDroppedRS.push(movedRS);
 
-            this.RSsubject.next(currentRSButtons);
             this.droppedRSsubject.next(currentDroppedRS);
         }
     }
@@ -78,28 +76,22 @@ export class ButtonService {
 
   // Moves the button from Dropped buttons back
   moveDroppedToORF(index: number) {
-  const currentRSButtons = this.RSsubject.value;
   const currentDroppedORF = this.droppedORFsubject.value;
 
   if (index >= 0 && index < currentDroppedORF.length) {
-    const movedORF = currentDroppedORF.splice(index, 1)[0];
-    currentRSButtons.push(movedORF);
+    currentDroppedORF.splice(index, 1)[0];
 
-    this.RSsubject.next(currentRSButtons);
     this.droppedORFsubject.next(currentDroppedORF);
   }
 }
 
 // Moves the button from Dropped buttons back
 moveDroppedToRS(index: number) {
-  const currentRSButtons = this.RSsubject.value;
   const currentDroppedRS = this.droppedRSsubject.value;
 
   if (index >= 0 && index < currentDroppedRS.length) {
-    const movedRS = currentDroppedRS.splice(index, 1)[0];
-    currentRSButtons.push(movedRS);
-
-    this.RSsubject.next(currentRSButtons);
+    currentDroppedRS.splice(index, 1)[0];
+  
     this.droppedRSsubject.next(currentDroppedRS);
   }
 }
@@ -115,9 +107,9 @@ moveDroppedToRS(index: number) {
     let linear = this.regexService.linear
     
    output.push(plasmid.slice(rs1position-6,rs1position+this.regexService.priorityPattern[rs1]) + linear.slice(0,20))
-    output.push(this.inputService.translateValue(linear.slice(-20) + plasmid.slice(rs2position, rs2position + this.regexService.priorityPattern[rs2] + 6)).split("").reverse().join(""))
-
-    this.outputSubject.next(output)
+   output.push(this.inputService.translateValue(linear.slice(-20) + plasmid.slice(rs2position, rs2position + this.regexService.priorityPattern[rs2] + 6)).split("").reverse().join(""))
+  
+   this.outputSubject.next(output)
   }
 }
 

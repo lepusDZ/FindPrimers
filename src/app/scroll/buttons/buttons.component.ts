@@ -10,7 +10,6 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 })
 export class ButtonsComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
-  ORFbuttons: string[] = []; 
   RSbuttons: string[] = [];
   
   @Output() position = new EventEmitter<number>()

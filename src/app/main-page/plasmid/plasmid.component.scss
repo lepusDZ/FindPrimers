@@ -1,9 +1,9 @@
-.align-center {
+.container {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 80vh;
+    height: auto;
 }
 
 .overlay-text {
@@ -25,10 +25,11 @@
 }
 
 svg {
-    animation: rotate 100s linear infinite;
-    width: 100%;
-    touch-action: none;
+    /* Adjust the size as needed */
+    max-width: 80%;
     height: auto;
+    animation: rotate 100s linear infinite;
+    touch-action: none;
 }
 
 text {

@@ -1,6 +1,6 @@
 <div class="container">
     <div class="col-md-6">
-        <div class="formHolder bg-white m-3 shadow-lg">
+        <div class="formHolder bg-white m-3 shadow-lg text-center">
             <h2 class="text-center">Forward Primer</h2>
             <mat-form-field style="width:100%;" appearance="outline" class="mb-3 mb-sm-3">
                 <textarea #forward 
@@ -15,16 +15,16 @@
                         </textarea>
             </mat-form-field>
             <button mat-raised-button color="primary" class="shadow rounded" [cdkCopyToClipboard]="forwardPrimer" (click)="openSnackBar()">
-                <mat-icon>content-copy</mat-icon>
+                <mat-icon>content_copy</mat-icon>
                 Copy to clipboard
             </button>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="formHolder bg-white m-3 shadow-lg">
+        <div class="formHolder bg-white m-3 shadow-lg text-center">
             <h2 class="text-center">Reverse Primer</h2> 
             <mat-form-field style="width:100%;" appearance="outline" class="mb-3 mb-sm-3">
-                <textarea #reverse 
+                <textarea contenteditable="true" 
                 name="reverse" 
                 maxlength="20000" 
                 matInput rows="13" 
@@ -36,7 +36,7 @@
                 </textarea>
             </mat-form-field>
             <button mat-raised-button color="primary" class="shadow rounded" [cdkCopyToClipboard]="reversePrimer" (click)="openSnackBar()">
-                <mat-icon>content-copy</mat-icon>
+                <mat-icon>content_copy</mat-icon>
                      Copy to clipboard
             </button>
         </div>
