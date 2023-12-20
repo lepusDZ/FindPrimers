@@ -42,9 +42,9 @@ export class DragDropComponent {
       // moves the button to the list accordingly to the area where it was dropped
       // orf-drop is rs1 drop and rs is rs2 drop
       if (event.container.id === "ORF-drop" && event.previousContainer.id === "RS-drag") {
-        this.buttonService.moveORFToDropped(event.previousIndex);
+        this.buttonService.copyORFToDropped(event.previousIndex);
       } else if (event.container.id === "RS-drop" && event.previousContainer.id === "RS-drag") {
-        this.buttonService.moveRSToDropped(event.previousIndex);
+        this.buttonService.copyRSToDropped(event.previousIndex);
       }
     }
   }
