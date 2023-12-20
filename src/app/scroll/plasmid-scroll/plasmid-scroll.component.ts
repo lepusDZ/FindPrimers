@@ -43,15 +43,16 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
     { display: 'x1', value: 40 },
     { display: 'x2', value: 25},
     { display: 'x5', value: 10 },
-    { display: 'x10', value: 1 },
+    { display: 'x10', value: 0.2 },
 
   ];
 
+  mouseSpeedSettings = [1,2,4,8];
+
   currentSpeedIndex = 0;
-  mouseIndex = -1;
 
   speed: number = this.speedSettings[0].value;
-  mouseSpeed: number = this.speedSettings[this.speedSettings.length - 1].value;
+  mouseSpeed: number = this.mouseSpeedSettings[0];
 
   constructor(private inputService: InputService, private regexService: RegexService, private cdr: ChangeDetectorRef) { };
 
@@ -84,11 +85,7 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
     this.currentSpeedIndex = (this.currentSpeedIndex + 1) % this.speedSettings.length;
     this.speed = this.speedSettings[this.currentSpeedIndex].value;
 
-    this.mouseIndex = (this.mouseIndex - 1 + this.speedSettings.length) % this.speedSettings.length;
-    this.mouseSpeed = this.speedSettings[this.mouseIndex].value;
-
-    console.log(this.speed)
-    console.log(this.mouseSpeed)
+    this.mouseSpeed = this.mouseSpeedSettings[this.currentSpeedIndex]
   }
 
   
@@ -159,9 +156,9 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
     if (this.isScrolling && this.scrollElement.nativeElement.contains(event.target)) {
       event.preventDefault();
       if (event.deltaY > 0) {
-          this.scrollRight();
+          this.mouseScrollRight();
       } else {
-          this.scrollLeft();
+        this.mouseScrollLeft();
       }
     }
   }
@@ -201,6 +198,22 @@ export class PlasmidScrollComponent implements OnInit, AfterViewInit {
   scrollRight(): void {
     this.start = (this.start + 1) % this.stringLength;
     this.end = (this.end + 1) % this.stringLength;
+
+    // Update the displayed text
+    this.updateShownText();
+  }
+
+  mouseScrollLeft(): void {
+    this.start = (this.start - this.mouseSpeed + this.stringLength) % this.stringLength;
+    this.end = (this.end - this.mouseSpeed + this.stringLength) % this.stringLength;
+
+    // Update the displayed text
+    this.updateShownText();
+  }
+
+  mouseScrollRight(): void {
+    this.start = (this.start + this.mouseSpeed) % this.stringLength;
+    this.end = (this.end + this.mouseSpeed) % this.stringLength;
 
     // Update the displayed text
     this.updateShownText();

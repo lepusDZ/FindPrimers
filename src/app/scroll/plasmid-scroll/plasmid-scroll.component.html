@@ -57,8 +57,17 @@
         </text>
     </svg>
     <div class="button-container">
-        <button  (mouseenter)="startScroll('left')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll Left</button>
-        <button (mouseenter)="startScroll('right')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll Right</button>
-        <button class="btn btn-secondary" (click)="changeSpeed()">{{ currentSpeedDisplay }}</button>
+        <span class="text-center text-secondary">Vector Sequence Controls</span>
+        <div class="button-group">
+            <button (mouseenter)="startScroll('left')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll
+                Left</button>
+            <button (mouseenter)="startScroll('right')" (mouseleave)="stopScroll()" class="btn btn-primary">Scroll
+                Right</button>
+            <button class="btn btn-secondary pt-0 pb-0" (click)="changeSpeed()">
+                {{ currentSpeedDisplay }}
+                <br>
+                <span class="text-dark" style="font-size: 0.6em; display: block; text-align: center;">SPEED</span>
+            </button>
+        </div>
     </div>
 </div>

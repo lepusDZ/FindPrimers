@@ -27,13 +27,23 @@ text {
 
 .button-container {
     display: flex;
-    gap: 10px;
-    justify-content: center;
+    flex-direction: column;
+    /* Stack children vertically */
+    align-items: center;
     position: absolute;
     bottom: 1rem;
     width: 100%;
     z-index: 10;
-    /* Adjust this value as needed */
+    gap: 10px;
+    /* Space between span and button-group */
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    /* Space between buttons */
+    justify-content: center;
+    /* Center-align buttons */
 }
 
 .highlight {
