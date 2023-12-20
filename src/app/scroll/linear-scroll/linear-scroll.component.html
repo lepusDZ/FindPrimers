@@ -13,7 +13,8 @@
         <div class="text-display whitespace" [innerHTML]="rOrfsShown1 | safeHtml"></div>
         <div class="text-display whitespace" [innerHTML]="rOrfsShown2 | safeHtml"></div>
         <div class="text-display whitespace" [innerHTML]="rOrfsShown3 | safeHtml"></div>
-        <div class="button-container">
+        <div class="button-container row">
+            <span class="text-center text-secondary">Insert Sequence Slider</span>
             <mat-slider style="width:100%;" discrete min="0" max="{{ stringLength - 50 }}">
                 <input matSliderThumb [(ngModel)]="start" name="start" (input)="onSliderChange()">
             </mat-slider>
