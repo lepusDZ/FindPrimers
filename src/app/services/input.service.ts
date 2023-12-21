@@ -34,8 +34,13 @@ export class InputService {
     constructor(private regexService: RegexService) {}
     
     setInput(value: string): void {
-        this.inputSubject.next(value.toUpperCase());
-        this.processedInputSubject.next(this.translateValue(value.toUpperCase()));
+        if (value) {
+            this.inputSubject.next(value.toUpperCase());
+            this.processedInputSubject.next(this.translateValue(value.toUpperCase()));
+        } else {
+            this.inputSubject.next('');
+            this.processedInputSubject.next('');
+        }
     }
 
     saveFirstInput(value: string): void {

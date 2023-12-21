@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, debounceTime } from 'rxjs';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { InputService } from '../../services/input.service';
 
 @Component({
@@ -15,22 +15,12 @@ export class PlasmidComponent implements OnInit, OnDestroy {
   constructor(private inputService: InputService) { }
 
   ngOnInit(): void {
-    this.subscription.add(this.inputService.input$.pipe(
-      debounceTime(0)
-    ).subscribe(value => {
-      this.inputFromService = value.slice(0, 139);
-      if (value.length > 139) {
-        this.inputFromService += '.......';
-      }
+    this.subscription.add(this.inputService.input$.subscribe(value => {
+      this.inputFromService = value.slice(0, 500);
     }));
 
-    this.subscription.add(this.inputService.processed$.pipe(
-      debounceTime(0)
-    ).subscribe(value => {
-      this.processedInput = value.slice(0, 139);
-      if (value.length > 139) {
-        this.processedInput += '.......';
-      }
+    this.subscription.add(this.inputService.processed$.subscribe(value => {
+      this.processedInput = value.slice(0, 500);
     }));
   }
 
