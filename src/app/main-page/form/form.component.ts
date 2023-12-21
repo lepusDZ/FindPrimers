@@ -44,8 +44,16 @@ export class FormComponent implements OnDestroy {
       } else {
         this.showSpinner = true;
       }
+    } else {
+      if (!this.isFirstInputSubmitted) {
+        this.inputService.setInput('');
+      } else if (!this.isSecondInputSubmitted) {
+        this.inputService.setSecondInput('');
+      } else {
+        this.showSpinner = true;
     }
   }
+}
 
 
   onSubmit(form: NgForm): void {
