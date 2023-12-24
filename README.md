@@ -1,6 +1,9 @@
 # FindPrimers ([DEMO HERE](https://lepusdz.github.io/FindPrimers/))
 
-FindPrimers is a web-based molecular biology tool developed to automate the process of designing PCR primers for restriction enzyme cloning. It incorporates algorithms for finding Open Reading Frames (ORF) and type II restriction enzyme recognition sequences in circular and in linear DNA inputs and for navigating between them; then it automates the selection of the restriction enzymes based on the compatibility between the proposed vector and insert, and then it produces the final design of the forward and the reverse primers.
+FindPrimers is a web-based molecular biology tool developed to automate the process of designing PCR primers for restriction enzyme cloning. 
+
+It incorporates algorithms for finding Open Reading Frames (ORF) and type II restriction enzyme recognition sequences in circular and in linear DNA inputs and for navigating between them; then it automates the selection of the restriction enzymes based on the compatibility between the proposed vector and insert, and then it produces the final design of the forward and the reverse primers.
+
 This application is developed using Angular 17 and styled with Bootstrap, providing a robust and responsive user interface.
 
 ## Features
