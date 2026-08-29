@@ -1,9 +1,10 @@
 import { useMemo, useRef, useState, type ChangeEvent } from 'react';
 import {
-  AlertCircle, ArrowDown, CheckCircle2, Dna, Download, Info, Layers3,
-  LockKeyhole, RefreshCw, Sparkles, Upload, WandSparkles,
+  AlertCircle, ArrowDown, CheckCircle2, CornerRightDown, Dna, Download, Info, Layers3,
+  RefreshCw, Sparkles, Upload, WandSparkles,
 } from 'lucide-react';
 import SequenceInputCard from './components/SequenceInputCard';
+import Tooltip from './components/Tooltip';
 import VectorMap from './components/VectorMap';
 import InsertTrack from './components/InsertTrack';
 import PairSelector from './components/PairSelector';
@@ -25,6 +26,7 @@ export default function App() {
   const [selectedPair, setSelectedPair] = useState<EnzymePair | null>(null);
   const [primerMode, setPrimerMode] = useState<PrimerMode>('optimized');
   const [error, setError] = useState('');
+  const [exampleNudge, setExampleNudge] = useState(false);
   const projectInputRef = useRef<HTMLInputElement>(null);
   const analysisRef = useRef<HTMLDivElement>(null);
 
@@ -32,10 +34,11 @@ export default function App() {
   const insertValid = validateSequence(insert.sequence).valid;
   const canAnalyze = vectorValid && insertValid && vector.sequence.length >= 20 && insert.sequence.length >= 8;
 
-  const markDirtyVector = (next: ParsedSequence) => { setVector(next); setAnalysis(null); setSelectedPair(null); setError(''); };
-  const markDirtyInsert = (next: ParsedSequence) => { setInsert(next); setAnalysis(null); setSelectedPair(null); setError(''); };
+  const markDirtyVector = (next: ParsedSequence) => { setVector(next); setAnalysis(null); setSelectedPair(null); setError(''); setExampleNudge(false); };
+  const markDirtyInsert = (next: ParsedSequence) => { setInsert(next); setAnalysis(null); setSelectedPair(null); setError(''); setExampleNudge(false); };
 
   const runAnalysis = (nextVector = vector, nextInsert = insert, preferredPairId?: string) => {
+    setExampleNudge(false);
     const v = validateSequence(nextVector.sequence);
     const i = validateSequence(nextInsert.sequence);
     if (!v.valid || !i.valid) {
@@ -57,8 +60,7 @@ export default function App() {
   const loadExample = () => {
     const v: ParsedSequence = { name: 'Example vector', sequence: EXAMPLE_VECTOR, circular: true, annotations: [], source: 'plain' };
     const i: ParsedSequence = { name: 'Example insert', sequence: EXAMPLE_INSERT, circular: false, annotations: [], source: 'plain' };
-    setVector(v); setInsert(i); setError('');
-    runAnalysis(v, i);
+    setVector(v); setInsert(i); setAnalysis(null); setSelectedPair(null); setError(''); setExampleNudge(true);
   };
 
   const reset = () => {
@@ -79,6 +81,7 @@ export default function App() {
       setInsert(project.insert);
       setPrimerMode(project.primerMode);
       setError('');
+      setExampleNudge(false);
       runAnalysis(project.vector, project.insert, project.selectedPairId);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not open this project file.');
@@ -107,7 +110,9 @@ export default function App() {
         </a>
         <nav className="header-actions">
           <input ref={projectInputRef} className="hidden-input" type="file" accept=".json,application/json" onChange={(e: ChangeEvent<HTMLInputElement>) => void importProject(e.target.files?.[0])} />
-          <button className="header-button" onClick={() => projectInputRef.current?.click()}><Upload size={15} /> Open project</button>
+          <Tooltip content="Open a saved FindPrimers project (.json)">
+            <button className="header-button" onClick={() => projectInputRef.current?.click()}><Upload size={15} /> Open project</button>
+          </Tooltip>
           {analysis && <button className="header-button" onClick={exportProject}><Download size={15} /> Export</button>}
           <a className="github-link" href="https://github.com/lepusDZ/FindPrimers" target="_blank" rel="noreferrer">GitHub</a>
         </nav>
@@ -116,14 +121,8 @@ export default function App() {
       <main id="top">
         <section className="hero">
           <div className="hero-glow hero-glow-a" /><div className="hero-glow hero-glow-b" />
-          <div className="hero-kicker"><span className="pulse-dot" /> Browser-only · sequences never leave your device</div>
           <h1>Restriction cloning,<br /><em>without the spreadsheet.</em></h1>
-          <p className="hero-copy">Drop in a vector and insert. Find clean restriction pairs, inspect coding-region conflicts, design primers, and preview the final construct—in one local workflow.</p>
-          <div className="hero-points">
-            <span><CheckCircle2 size={16} /> circular-aware cut scanning</span>
-            <span><CheckCircle2 size={16} /> ranked enzyme pairs</span>
-            <span><CheckCircle2 size={16} /> Tm-aware primer mode</span>
-          </div>
+          <p className="hero-copy">Add a vector and insert, compare compatible restriction pairs, and generate primers in one focused workflow.</p>
         </section>
 
         <section className="workspace-section setup-section">
@@ -140,10 +139,12 @@ export default function App() {
 
           <div className="analyze-row">
             <button className="example-button" onClick={loadExample}><Sparkles size={16} /> Try an example</button>
-            <div className="privacy-note"><LockKeyhole size={15} /><span>No uploads. No API. No localStorage.</span></div>
-            <button className="primary-button" disabled={!canAnalyze} onClick={() => runAnalysis()}>
-              <WandSparkles size={18} /> Analyze cloning design <ArrowDown size={17} />
-            </button>
+            <div className="analyze-action">
+              {exampleNudge && <div className="analyze-nudge">Example ready <CornerRightDown size={18} /></div>}
+              <button className="primary-button" disabled={!canAnalyze} onClick={() => runAnalysis()}>
+                <WandSparkles size={18} /> Analyze cloning design <ArrowDown size={17} />
+              </button>
+            </div>
           </div>
           {error && !analysis && <div className="inline-error"><AlertCircle size={17} />{error}</div>}
         </section>
