@@ -10,7 +10,7 @@ interface Props {
 export default function PairSelector({ pairs, selectedId, onSelect }: Props) {
   return (
     <div className="pair-list">
-      {pairs.slice(0, 10).map((pair, index) => {
+      {pairs.slice(0, 25).map((pair, index) => {
         const selected = pair.id === selectedId;
         return (
           <button key={pair.id} className={`pair-card ${selected ? 'selected' : ''}`} onClick={() => onSelect(pair)}>

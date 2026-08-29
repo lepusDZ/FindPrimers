@@ -41,14 +41,15 @@ interface Props {
   design: PrimerPairDesign;
   mode: PrimerMode;
   onModeChange: (mode: PrimerMode) => void;
+  embedded?: boolean;
 }
 
-export default function PrimerPanel({ design, mode, onModeChange }: Props) {
+export default function PrimerPanel({ design, mode, onModeChange, embedded = false }: Props) {
   return (
-    <section className="primer-section">
+    <section className={`primer-section ${embedded ? 'embedded' : ''}`}>
       <div className="section-heading split-heading">
         <div>
-          <div className="eyebrow">04 · Primer design</div>
+          {!embedded && <div className="eyebrow">Primer design</div>}
           <h2>Ready-to-review primers</h2>
           <p>5′ tails are shown separately from the template-annealing region.</p>
         </div>
