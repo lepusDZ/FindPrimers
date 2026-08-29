@@ -144,11 +144,12 @@ main { position: relative; }
 .design-detail-head h2 { display: flex; align-items: center; gap: 10px; margin: 5px 0 4px; font-size: 30px; letter-spacing: -.04em; }
 .design-detail-head h2 b { color: #4c6b61; font-weight: 400; }
 .design-detail-head p { margin: 0; color: #78958b; font-size: 10px; line-height: 1.5; }
-.score-block { position: relative; display: flex; align-items: baseline; flex: 0 0 auto; padding-right: 2px; }
+.score-block { display: flex; align-items: center; gap: 7px; flex: 0 0 auto; }
+.score-value { display: flex; align-items: baseline; }
 .score-block strong { color: var(--mint); font: 700 26px 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; }
 .score-block small { color: #4e6d63; font: 500 9px 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; }
 .score-info, .info-button { display: grid; place-items: center; border: 0; color: #607d74; background: transparent; cursor: help; }
-.score-info { position: absolute; right: -4px; top: -12px; width: 24px; height: 24px; }
+.score-info { width: 24px; height: 24px; border-radius: 8px; }
 .info-button { width: 30px; height: 30px; border-radius: 8px; }
 .info-button:hover, .score-info:hover { color: #9bb8ae; background: rgba(255,255,255,.035); }
 .detail-tabs { display: flex; gap: 4px; padding: 0 22px; border-bottom: 1px solid var(--line); }
@@ -177,12 +178,12 @@ main { position: relative; }
 .site-hit-area { stroke: transparent; stroke-width: 16; pointer-events: stroke; }
 .site-mark { stroke: #78978d; stroke-width: 1.8; opacity: .82; transition: stroke .12s ease, stroke-width .12s ease, opacity .12s ease; }
 .site-dot { fill: #78978d; opacity: .88; transition: fill .12s ease, opacity .12s ease; }
-.site:hover .site-mark, .site.active .site-mark, .site:focus .site-mark { stroke: #d0ece3; stroke-width: 2.55; opacity: 1; }
-.site:hover .site-dot, .site.active .site-dot, .site:focus .site-dot { fill: #d0ece3; opacity: 1; }
+.site:hover .site-mark, .site:focus .site-mark { stroke: #b8d8ce; stroke-width: 2.55; opacity: 1; }
+.site:hover .site-dot, .site:focus .site-dot { fill: #b8d8ce; opacity: 1; }
 .site.selected .site-mark { stroke: var(--mint); stroke-width: 3; opacity: 1; }
 .site.selected .site-dot { fill: var(--mint); opacity: 1; }
-.site.selected:hover .site-mark, .site.selected.active .site-mark, .site.selected:focus .site-mark { stroke: #c8ffe9; stroke-width: 3.4; }
-.site.selected:hover .site-dot, .site.selected.active .site-dot, .site.selected:focus .site-dot { fill: #c8ffe9; }
+.site.active .site-mark, .site.selected.active .site-mark { stroke: var(--aqua); stroke-width: 3.4; opacity: 1; }
+.site.active .site-dot, .site.selected.active .site-dot { fill: var(--aqua); opacity: 1; }
 .site-callout { pointer-events: none; }
 .site-callout path { fill: none; stroke: rgba(142,240,202,.62); stroke-width: 1.25; }
 .site-callout rect { fill: #11251f; stroke: rgba(142,240,202,.34); stroke-width: 1; }
@@ -193,7 +194,7 @@ main { position: relative; }
 .map-inspector-kicker { fill: #5f8176; font: 750 7px 'Avenir Next', 'Segoe UI', system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; }
 .map-site-sequence { fill: #a9c7bd; font: 650 10px 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; letter-spacing: .06em; }
 .map-site-status { fill: #6f8f85; font: 650 8px 'Avenir Next', 'Segoe UI', system-ui, sans-serif; }
-.map-site-status.selected { fill: var(--mint); }
+.map-site-status.selected { fill: var(--aqua); }
 .map-insert-label { fill: var(--mint); font: 700 10px 'Avenir Next', 'Segoe UI', system-ui, sans-serif; }
 .map-legend { width: 100%; display: flex; justify-content: center; flex-wrap: wrap; gap: 13px; color: #5c796f; font-size: 8px; text-transform: uppercase; letter-spacing: .06em; }
 .map-legend span { display: inline-flex; align-items: center; gap: 5px; }

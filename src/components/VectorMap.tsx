@@ -90,7 +90,14 @@ export default function VectorMap({
   const togglePinnedSite = (site: RestrictionSite) => {
     const key = `${site.enzyme}-${site.position}`;
     const pinnedKey = pinnedSite ? `${pinnedSite.enzyme}-${pinnedSite.position}` : '';
-    setPinnedSite(pinnedKey === key ? null : site);
+
+    if (pinnedKey === key) {
+      setPinnedSite(null);
+      setHoveredSite(null);
+      return;
+    }
+
+    setPinnedSite(site);
   };
 
   return (
@@ -185,14 +192,13 @@ export default function VectorMap({
               {inspectedSelected ? 'Selected in this route' : 'Unique vector cut · insert-safe'}
             </text>
           </g>
-        ) : (
+        ) : compact ? (
           <>
             <text x={center} y={center - 10} textAnchor="middle" className="map-title">{title}</text>
             <text x={center} y={center + 17} textAnchor="middle" className="map-length">{formatBp(sequenceLength)}</text>
-            {!compact && sites.length > 0 && <text x={center} y={center + 42} textAnchor="middle" className="map-hint">Hover or tap a cut site</text>}
             {insertion?.label && <text x={center} y={center + 41} textAnchor="middle" className="map-insert-label">+ {insertion.label}</text>}
           </>
-        )}
+        ) : null}
       </svg>
     </div>
   );

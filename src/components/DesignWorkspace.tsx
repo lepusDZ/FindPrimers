@@ -162,10 +162,12 @@ export default function DesignWorkspace({
                 </p>
               </div>
               <div className="score-block">
+                <div className="score-value">
+                  <strong>{selectedPair.score}</strong><small>/100</small>
+                </div>
                 <Tooltip content="Heuristic score based on site spacing, coding-region conflicts, and recognition length. Verify enzyme conditions with the supplier.">
                   <button className="score-info" aria-label="About design score"><Info size={14} /></button>
                 </Tooltip>
-                <strong>{selectedPair.score}</strong><small>/100</small>
               </div>
             </div>
 
