@@ -5,15 +5,24 @@ interface Props {
   pairs: EnzymePair[];
   selectedId?: string;
   onSelect: (pair: EnzymePair) => void;
+  onPreview?: (pair: EnzymePair | null) => void;
 }
 
-export default function PairSelector({ pairs, selectedId, onSelect }: Props) {
+export default function PairSelector({ pairs, selectedId, onSelect, onPreview }: Props) {
   return (
     <div className="pair-list">
       {pairs.slice(0, 25).map((pair, index) => {
         const selected = pair.id === selectedId;
         return (
-          <button key={pair.id} className={`pair-card ${selected ? 'selected' : ''}`} onClick={() => onSelect(pair)}>
+          <button
+            key={pair.id}
+            className={`pair-card ${selected ? 'selected' : ''}`}
+            onClick={() => onSelect(pair)}
+            onMouseEnter={() => onPreview?.(pair)}
+            onMouseLeave={() => onPreview?.(null)}
+            onFocus={() => onPreview?.(pair)}
+            onBlur={() => onPreview?.(null)}
+          >
             <div className="pair-rank">{index === 0 ? <Sparkles size={16} /> : String(index + 1).padStart(2, '0')}</div>
             <div className="pair-main">
               <div className="pair-title-row">

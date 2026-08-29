@@ -37,15 +37,19 @@ function Overview({
   insert,
   vectorSites,
   pair,
-}: Pick<Props, 'analysis' | 'vector' | 'insert' | 'vectorSites'> & { pair: EnzymePair }) {
+  previewPair,
+}: Pick<Props, 'analysis' | 'vector' | 'insert' | 'vectorSites'> & { pair: EnzymePair; previewPair?: EnzymePair | null }) {
   const removedStart = (pair.first.position + pair.first.length) % vector.sequence.length;
+  const previewRemovedStart = previewPair
+    ? (previewPair.first.position + previewPair.first.length) % vector.sequence.length
+    : undefined;
 
   return (
     <div className="overview-grid">
       <div className="overview-map-card">
         <div className="panel-label">
           <span>Vector map</span>
-          <span className="subtle">hover a cut site for details</span>
+          <span className="subtle">hover sites or pairs to inspect</span>
         </div>
         <VectorMap
           sequenceLength={vector.sequence.length}
@@ -53,12 +57,17 @@ function Overview({
           orfs={analysis.vectorOrfs}
           sites={vectorSites}
           selected={[pair.first, pair.second]}
+          preview={previewPair ? [previewPair.first, previewPair.second] : []}
           removedSegment={{ start: removedStart, end: pair.second.position }}
+          previewSegment={previewPair && previewRemovedStart !== undefined
+            ? { start: previewRemovedStart, end: previewPair.second.position }
+            : undefined}
         />
         <div className="map-legend">
           <span><i className="legend-cut" /> usable site</span>
           <span><i className="legend-orf" /> CDS / ORF</span>
           <span><i className="legend-selected" /> selected</span>
+          <span><i className="legend-preview" /> pair preview</span>
           <span><i className="legend-removed" /> replaced segment</span>
         </div>
       </div>
@@ -127,6 +136,8 @@ export default function DesignWorkspace({
   construct,
 }: Props) {
   const [tab, setTab] = useState<DetailTab>('overview');
+  const [previewPair, setPreviewPair] = useState<EnzymePair | null>(null);
+  const visiblePreviewPair = previewPair?.id === selectedPair?.id ? null : previewPair;
 
   return (
     <section className="workspace-section design-workspace">
@@ -139,7 +150,12 @@ export default function DesignWorkspace({
           <span>score</span>
         </div>
         {analysis.pairs.length ? (
-          <PairSelector pairs={analysis.pairs} selectedId={selectedPair?.id} onSelect={onSelectPair} />
+          <PairSelector
+            pairs={analysis.pairs}
+            selectedId={selectedPair?.id}
+            onSelect={onSelectPair}
+            onPreview={setPreviewPair}
+          />
         ) : (
           <div className="empty-state compact-empty">
             <AlertCircle size={26} />
@@ -187,7 +203,14 @@ export default function DesignWorkspace({
 
             <div className="detail-body">
               {tab === 'overview' && (
-                <Overview analysis={analysis} vector={vector} insert={insert} vectorSites={vectorSites} pair={selectedPair} />
+                <Overview
+                  analysis={analysis}
+                  vector={vector}
+                  insert={insert}
+                  vectorSites={vectorSites}
+                  pair={selectedPair}
+                  previewPair={visiblePreviewPair}
+                />
               )}
               {tab === 'primers' && (
                 <PrimerPanel embedded design={primerDesign} mode={primerMode} onModeChange={onPrimerModeChange} />

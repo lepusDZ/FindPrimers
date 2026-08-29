@@ -8,7 +8,9 @@ interface Props {
   orfs?: Orf[];
   sites?: RestrictionSite[];
   selected?: RestrictionSite[];
+  preview?: RestrictionSite[];
   removedSegment?: { start: number; end: number };
+  previewSegment?: { start: number; end: number };
   insertion?: { start: number; end: number; label?: string };
   compact?: boolean;
 }
@@ -71,7 +73,9 @@ export default function VectorMap({
   orfs = [],
   sites = [],
   selected = [],
+  preview = [],
   removedSegment,
+  previewSegment,
   insertion,
   compact = false,
 }: Props) {
@@ -81,6 +85,7 @@ export default function VectorMap({
   const [hoveredSite, setHoveredSite] = useState<RestrictionSite | null>(null);
   const [pinnedSite, setPinnedSite] = useState<RestrictionSite | null>(null);
   const selectedKeys = new Set(selected.map((site) => `${site.enzyme}-${site.position}`));
+  const previewKeys = new Set(preview.map((site) => `${site.enzyme}-${site.position}`));
   const angleFor = (position: number) => (position / Math.max(1, sequenceLength)) * 360;
   const labels = compact ? [] : labelPositions(selected, center, radius, angleFor);
   const inspectedSite = hoveredSite ?? pinnedSite;
@@ -124,6 +129,13 @@ export default function VectorMap({
           />
         )}
 
+        {previewSegment && (
+          <path
+            d={arcPath(center, center, radius + 6, angleFor(previewSegment.start), angleFor(previewSegment.end))}
+            className="preview-arc"
+          />
+        )}
+
         {insertion && (
           <path
             d={arcPath(center, center, radius - 14, angleFor(insertion.start), angleFor(insertion.end))}
@@ -141,8 +153,9 @@ export default function VectorMap({
           const hitOuter = polar(center, center, radius + (compact ? 24 : 34), angle);
           const dot = polar(center, center, radius + (compact ? 17 : 24), angle);
           const isSelected = selectedKeys.has(key);
+          const isPreview = previewKeys.has(key);
           const isActive = inspectedKey === key;
-          const classes = ['site', isSelected && 'selected', isActive && 'active'].filter(Boolean).join(' ');
+          const classes = ['site', isSelected && 'selected', isPreview && 'preview', isActive && 'active'].filter(Boolean).join(' ');
 
           return (
             <g
