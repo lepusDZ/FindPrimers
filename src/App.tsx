@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState, type ChangeEvent } from 'react';
 import {
-  AlertCircle, ArrowDown, CornerRightDown, Dna, Download, RefreshCw, Sparkles, Upload, WandSparkles,
+  AlertCircle, ArrowDown, ArrowUp, Dna, Download, RefreshCw, Sparkles, Upload, WandSparkles,
 } from 'lucide-react';
 import SequenceInputCard from './components/SequenceInputCard';
 import Tooltip from './components/Tooltip';
@@ -130,10 +130,10 @@ export default function App() {
           <div className="analyze-row">
             <button className="example-button" onClick={loadExample}><Sparkles size={16} /> Try an example</button>
             <div className="analyze-action">
-              {exampleNudge && <div className="analyze-nudge">Example ready <CornerRightDown size={18} /></div>}
               <button className="primary-button" disabled={!canAnalyze} onClick={() => runAnalysis()}>
                 <WandSparkles size={18} /> Analyze cloning design <ArrowDown size={17} />
               </button>
+              {exampleNudge && <div className="analyze-nudge"><ArrowUp size={16} /><span>Example ready — analyze it</span></div>}
             </div>
           </div>
           {error && !analysis && <div className="inline-error"><AlertCircle size={17} />{error}</div>}
