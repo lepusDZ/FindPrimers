@@ -1,8 +1,6 @@
 # FindPrimers
 
-FindPrimers is a browser-only tool for designing restriction-cloning PCR primers.
-
-Paste or upload a vector and insert, compare compatible restriction-enzyme pairs, inspect coding-region conflicts, design primers, and preview the resulting construct. Sequence data stays in the browser.
+FindPrimers is a restriction-cloning primer design tool. Give it a vector and insert, compare compatible restriction-enzyme pairs, review the primers, and preview the resulting construct.
 
 **Live site:** https://lepusdz.github.io/FindPrimers/
 
@@ -10,72 +8,57 @@ Paste or upload a vector and insert, compare compatible restriction-enzyme pairs
 
 - Plain DNA, FASTA, and GenBank input
 - Circular-aware restriction-site scanning
-- Automatic filtering for enzymes that cut the vector once and the insert zero times
-- Ranked two-enzyme cloning pairs with coding-region warnings
-- GenBank CDS annotations when available, with ORF prediction as a fallback
-- Quick primer mode with a fixed 20 nt annealing region
-- Optimized primer mode with Tm, GC, 3′ base, hairpin, and dimer checks
-- Predicted final construct preview
-- Explicit project JSON import/export
-- No backend, account, uploads, localStorage, or analytics
+- Ranked enzyme pairs that cut the vector once and the insert zero times
+- GenBank CDS annotations with ORF prediction as a fallback
+- Quick and Tm-aware primer design modes
+- Predicted construct preview
+- Project JSON import/export
 
-## Run locally
+## Development
 
-Use Node 24 LTS. Check your version, install dependencies, and start Vite:
+Use Node 24 LTS.
 
 ```bash
-node -v
-npm install
+npm ci
 npm run dev
 ```
 
-Vite will print the local URL. Because the repository is configured for GitHub Pages, the app is served under `/FindPrimers/`. The included `.nvmrc` is only a convenience for people who already use `nvm`; it is not required.
-
-Useful commands:
+Other useful commands:
 
 ```bash
-npm test        # unit tests
-npm run build   # production build
-npm run check   # typecheck + tests + build
+npm test
+npm run typecheck
+npm run build
+npm run check
 ```
 
-## Deploy
-
-The repository includes a GitHub Pages workflow at `.github/workflows/deploy-pages.yml`.
-
-1. Push to `main`.
-2. In **Settings → Pages**, set the source to **GitHub Actions**.
-3. The workflow tests the app, builds `dist/`, and deploys it.
-
-The Vite base path is `/FindPrimers/`, matching this repository name.
+The Vite base path is `/FindPrimers/` because the app is deployed from the project GitHub Pages URL.
 
 ## Project structure
 
 ```text
 src/
-├── App.tsx
-├── components/        UI components and sequence visualizations
+├── components/        React UI and sequence visualizations
 ├── core/              sequence, ORF, restriction, primer, and project logic
 ├── data/enzymes.json  restriction-enzyme recognition motifs
+├── App.tsx
 ├── main.tsx
 └── styles.css
 ```
 
-The code in `src/core/` does not depend on React. This keeps the biological calculations testable and separate from the UI.
+The code in `src/core/` is independent of React so the biological calculations can be tested without the UI.
 
 ## Primer modes
 
 **Quick** uses a 6-base vector flank, the selected restriction site, and a fixed 20 nt insert-annealing region.
 
-**Optimized** tests 18–32 nt annealing regions and scores candidate pairs using nearest-neighbor Tm, Tm balance, GC content, 3′ GC, and simple complementarity checks for hairpins and dimers.
-
-Optimized mode is not Primer3. It is a lightweight browser implementation intended for this workflow.
+**Optimized** checks 18–32 nt annealing regions and scores them using nearest-neighbor Tm, Tm balance, GC content, 3′ GC, and simple hairpin/dimer complementarity checks. It is a lightweight implementation for this workflow, not Primer3.
 
 ## Limitations
 
-FindPrimers is a design aid. The bundled enzyme data contains recognition motifs but not full supplier metadata, so pair ranking does not currently account for exact cleavage offsets, buffer compatibility, methylation sensitivity, star activity, heat inactivation, or enzyme-specific terminal-base requirements.
+The bundled enzyme data contains recognition motifs but not full supplier metadata. Pair ranking does not currently account for cleavage offsets, buffer compatibility, methylation sensitivity, star activity, heat inactivation, or enzyme-specific terminal-base requirements.
 
-Check the selected enzymes and final primer sequences against the supplier documentation before experimental use.
+Check the selected enzymes and final primer sequences against supplier documentation before experimental use.
 
 ## License
 

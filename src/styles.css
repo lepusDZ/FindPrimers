@@ -206,7 +206,6 @@ main { position: relative; }
 .pair-score { text-align: right; }
 .pair-score span { color: #cfe3dd; font: 600 14px 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; }
 .pair-score small { color: #4f6a62; font-size: 7px; }
-.pair-arrow { display: none; }
 .empty-state { min-height: 430px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #708d84; }
 .empty-state svg { color: var(--coral); }.empty-state h3 { color: #dcebe6; margin: 13px 0 6px; }.empty-state p { max-width: 320px; margin: 0; font-size: 12px; line-height: 1.6; }
 .compact-empty { min-height: 340px; }

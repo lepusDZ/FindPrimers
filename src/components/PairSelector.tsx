@@ -1,4 +1,4 @@
-import { AlertTriangle, Check, ChevronRight, Sparkles } from 'lucide-react';
+import { AlertTriangle, Check, Sparkles } from 'lucide-react';
 import type { EnzymePair } from '../core/types';
 
 interface Props {
@@ -29,7 +29,6 @@ export default function PairSelector({ pairs, selectedId, onSelect }: Props) {
               </div>
             </div>
             <div className="pair-score"><span>{pair.score}</span><small>/100</small></div>
-            <ChevronRight className="pair-arrow" size={17} />
           </button>
         );
       })}
