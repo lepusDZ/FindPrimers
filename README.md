@@ -1,51 +1,82 @@
-# FindPrimers ([DEMO HERE](https://lepusdz.github.io/FindPrimers/))
+# FindPrimers
 
-FindPrimers is a web-based molecular biology tool developed to automate the process of designing PCR primers for restriction enzyme cloning. 
+FindPrimers is a browser-only tool for designing restriction-cloning PCR primers.
 
-It incorporates algorithms for finding Open Reading Frames (ORF) and type II restriction enzyme recognition sequences in circular and in linear DNA inputs and for navigating between them; then it automates the selection of the restriction enzymes based on the compatibility between the proposed vector and insert, and then it produces the final design of the forward and the reverse primers.
+Paste or upload a vector and insert, compare compatible restriction-enzyme pairs, inspect coding-region conflicts, design primers, and preview the resulting construct. Sequence data stays in the browser.
 
-This application is developed using Angular 17 and styled with Bootstrap, providing a robust and responsive user interface.
+**Live site:** https://lepusdz.github.io/FindPrimers/
 
 ## Features
-- **ORF Search Algorithm**: Similarly to NCBI ORFFinder or EXPASY Translate Tool, efficiently locates open reading frames in long genetic sequences.
-- **Enzyme Search Algorithm**: Similarly to NEBCutter, identifies restriction enzyme recognition sequences in DNA and filters it to find sites available for restriction cloning.
-- **One-Stop Tool**: Combines the key capabilities of the ORFFinder, NEBCutter, and SnapGene to enable a first-in-class “one-click” restriction cloning primer design.
-- **User-Friendly Interface**: Built with Angular 17 and Bootstrap for a responsive and intuitive experience.
 
-### Browser Compatibility
-The application is optimized for the following web browsers:
-- Google Chrome
-- Mozilla Firefox
-- Microsoft Edge
+- Plain DNA, FASTA, and GenBank input
+- Circular-aware restriction-site scanning
+- Automatic filtering for enzymes that cut the vector once and the insert zero times
+- Ranked two-enzyme cloning pairs with coding-region warnings
+- GenBank CDS annotations when available, with ORF prediction as a fallback
+- Quick primer mode with a fixed 20 nt annealing region
+- Optimized primer mode with Tm, GC, 3′ base, hairpin, and dimer checks
+- Predicted final construct preview
+- Explicit project JSON import/export
+- No backend, account, uploads, localStorage, or analytics
 
-### Limitations
-- **Mobile Devices**: FindPrimers is currently not supported on mobile devices and will not function correctly on smartphones or tablets.
-- **Safari Browser**: Please note that FindPrimers is currently not compatible with Safari and will not work as intended in this browser.
+## Run locally
 
-## Live Demo
-Experience FindPrimers in action: [DEMO HERE](https://lepusdz.github.io/FindPrimers/)
+Use Node 24 LTS. Check your version, install dependencies, and start Vite:
 
-## Setup and Installation
+```bash
+node -v
+npm install
+npm run dev
+```
 
-### Prerequisites
-Ensure you have the following installed:
-- Node.js
-- Angular CLI
+Vite will print the local URL. Because the repository is configured for GitHub Pages, the app is served under `/FindPrimers/`. The included `.nvmrc` is only a convenience for people who already use `nvm`; it is not required.
 
-### Installation Steps
-1. **Clone the Repository**
-   Clone or download the FindPrimers repository to your local machine.
+Useful commands:
 
-2. **Install Dependencies**
-   Navigate to the cloned directory and run the following commands:
-   ```bash
-   npm install
-3. **Run the Application**
-   Once the dependencies are installed, start the application using:
-   ```bash
-   ng serve
-4. **Access the Application**
-The application will be running at [http://localhost:4200/](http://localhost:4200/). Open this URL in your browser to start using FindPrimers.
+```bash
+npm test        # unit tests
+npm run build   # production build
+npm run check   # typecheck + tests + build
+```
 
-### Contributions
-Contributions to the FindPrimers project are welcome. Please follow the standard procedures for submitting issues or pull requests on GitHub.
+## Deploy
+
+The repository includes a GitHub Pages workflow at `.github/workflows/deploy-pages.yml`.
+
+1. Push to `main`.
+2. In **Settings → Pages**, set the source to **GitHub Actions**.
+3. The workflow tests the app, builds `dist/`, and deploys it.
+
+The Vite base path is `/FindPrimers/`, matching this repository name.
+
+## Project structure
+
+```text
+src/
+├── App.tsx
+├── components/        UI components and sequence visualizations
+├── core/              sequence, ORF, restriction, primer, and project logic
+├── data/enzymes.json  restriction-enzyme recognition motifs
+├── main.tsx
+└── styles.css
+```
+
+The code in `src/core/` does not depend on React. This keeps the biological calculations testable and separate from the UI.
+
+## Primer modes
+
+**Quick** uses a 6-base vector flank, the selected restriction site, and a fixed 20 nt insert-annealing region.
+
+**Optimized** tests 18–32 nt annealing regions and scores candidate pairs using nearest-neighbor Tm, Tm balance, GC content, 3′ GC, and simple complementarity checks for hairpins and dimers.
+
+Optimized mode is not Primer3. It is a lightweight browser implementation intended for this workflow.
+
+## Limitations
+
+FindPrimers is a design aid. The bundled enzyme data contains recognition motifs but not full supplier metadata, so pair ranking does not currently account for exact cleavage offsets, buffer compatibility, methylation sensitivity, star activity, heat inactivation, or enzyme-specific terminal-base requirements.
+
+Check the selected enzymes and final primer sequences against the supplier documentation before experimental use.
+
+## License
+
+MIT

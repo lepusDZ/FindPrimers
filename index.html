@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07110f" />
+    <meta
+      name="description"
+      content="FindPrimers is a browser-only restriction cloning primer design tool."
+    />
+    <title>FindPrimers</title>
+    <style>
+      #boot-fallback {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        color: #cfe7df;
+        background: #07110f;
+        font: 500 14px/1.5 system-ui, sans-serif;
+        text-align: center;
+      }
+      #boot-fallback strong { display: block; margin-bottom: 6px; color: #edf7f4; }
+      #boot-fallback span { color: #7f9b92; }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="boot-fallback" role="status">
+        <div><strong>Loading FindPrimers…</strong><span>Starting the local sequence workspace.</span></div>
+      </div>
+    </div>
+    <script>
+      (() => {
+        const showStartupError = () => {
+          const fallback = document.getElementById('boot-fallback');
+          if (!fallback) return;
+          fallback.innerHTML = '<div><strong>FindPrimers could not start.</strong><span>Open the browser console for the startup error.</span></div>';
+        };
+        window.addEventListener('error', showStartupError);
+        window.addEventListener('unhandledrejection', showStartupError);
+        window.setTimeout(showStartupError, 10000);
+      })();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
