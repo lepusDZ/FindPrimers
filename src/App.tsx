@@ -6,7 +6,7 @@ import {
 import SequenceInputCard from './components/SequenceInputCard';
 import Tooltip from './components/Tooltip';
 import VectorMap from './components/VectorMap';
-import InsertTrack from './components/InsertTrack';
+import InsertCompatibility from './components/InsertCompatibility';
 import PairSelector from './components/PairSelector';
 import PrimerPanel from './components/PrimerPanel';
 import type { AnalysisResult, EnzymePair, ParsedSequence, PrimerMode, ProjectFile } from './core/types';
@@ -192,7 +192,7 @@ export default function App() {
                 </div>
               </div>
 
-              <InsertTrack length={insert.sequence.length} orfs={analysis.insertOrfs} sites={internalInsertSites} />
+              {selectedPair && <InsertCompatibility length={insert.sequence.length} orfs={analysis.insertOrfs} pair={selectedPair} />}
             </section>
 
             {selectedPair && primerDesign && construct && (

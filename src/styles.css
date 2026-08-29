@@ -190,14 +190,19 @@ main { position: relative; }
 .empty-state { height: 430px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #708d84; }
 .empty-state svg { color: var(--coral); }.empty-state h3 { color: #dcebe6; margin: 13px 0 6px; }.empty-state p { max-width: 320px; margin: 0; font-size: 12px; line-height: 1.6; }
 
-.insert-track-card { margin-top: 14px; padding: 18px 20px 22px; border: 1px solid var(--line); border-radius: 15px; background: rgba(10,24,20,.68); }
-.track-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
-.track-head > div { display: flex; align-items: baseline; gap: 11px; }.track-head strong { color: #dcece7; font-size: 13px; }.track-head > span { color: #5d776f; font-size: 10px; }
-.insert-track { position: relative; height: 56px; margin: 16px 14px 0; }
-.track-line { position: absolute; top: 27px; left: 0; right: 0; height: 2px; background: #39584f; }
-.track-orf { position: absolute; top: 20px; height: 15px; border-radius: 4px; opacity: .75; }
-.track-site { position: absolute; top: 15px; width: 1px; height: 26px; background: #e1a95e; opacity: .7; }
-.track-end { position: absolute; bottom: -2px; color: #59766d; font: 500 9px 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; }.track-end.start { left: 0; }.track-end.end { right: 0; }
+.insert-compatibility { margin-top: 14px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 15px; background: rgba(10,24,20,.68); }
+.insert-compatibility-head { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.insert-compatibility-head > div { display: flex; align-items: baseline; gap: 11px; }
+.insert-compatibility-head strong { color: #dcece7; font-size: 13px; }
+.insert-compatibility-head > span { display: inline-flex; align-items: center; gap: 6px; color: #607c73; font-size: 10px; }
+.compatibility-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+.compatibility-item { display: flex; align-items: flex-start; gap: 9px; min-width: 0; padding: 11px 12px; border: 1px solid rgba(95,210,170,.09); border-radius: 10px; background: rgba(95,210,170,.04); }
+.compatibility-item svg { flex: 0 0 auto; margin-top: 1px; color: var(--mint); }
+.compatibility-item strong, .compatibility-item span { display: block; }
+.compatibility-item strong { color: #bdd8cf; font-size: 11px; }
+.compatibility-item span { margin-top: 3px; color: #69867c; font-size: 9px; line-height: 1.4; }
+.compatibility-item.summary { background: rgba(104,217,227,.035); border-color: rgba(104,217,227,.09); }
+.compatibility-item.summary svg { color: var(--aqua); }
 
 .selected-design-section { padding: 68px 0 30px; }
 .selected-design-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; }
@@ -260,7 +265,7 @@ footer { width: min(1240px, calc(100% - 48px)); margin: 72px auto 0; padding: 30
   .stat-grid { grid-template-columns: 1fr 1fr; gap: 7px; }
   .stat-card { padding: 14px; }.stat-card strong { font-size: 21px; }
   .map-panel { padding: 14px 8px 18px; }.candidate-panel { padding: 15px; }
-  .reason-grid { grid-template-columns: 1fr; }
+  .reason-grid, .compatibility-grid { grid-template-columns: 1fr; }
   .mode-switch { width: 100%; }.mode-switch button { flex: 1; min-width: 0; }
   .primer-card { padding: 15px; }.primer-sequence { font-size: 10px; }
   .construct-section { padding: 52px 0; }
@@ -273,7 +278,6 @@ footer { width: min(1240px, calc(100% - 48px)); margin: 72px auto 0; padding: 30
   .analyze-row { align-items: stretch; flex-direction: column; }.example-button { width: 100%; }.analyze-action { width: 100%; }.analyze-nudge { right: 10px; }
   .stat-grid { grid-template-columns: 1fr; }
   .pair-card { grid-template-columns: 24px minmax(0,1fr) 45px; }.pair-arrow { display: none; }.recommended-badge { display: none; }
-  .track-head { align-items: flex-start; flex-direction: column; }
   .selected-design-head h2 { font-size: 30px; }
   .vector-map.compact { width: 260px; }
 }
