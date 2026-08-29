@@ -152,10 +152,15 @@ main { position: relative; }
 .orf-1 { stroke: #8ef0ca; background: #8ef0ca; }
 .orf-2 { stroke: #c2a8ff; background: #c2a8ff; }
 .insert-arc { fill: none; stroke: #8ef0ca; stroke-width: 9; stroke-linecap: round; }
-.site line { stroke: #65867c; stroke-width: 1.4; }
-.site text { fill: #79978d; font: 600 9px 'Avenir Next', 'Segoe UI', system-ui, sans-serif; }
-.site.selected line { stroke: var(--mint); stroke-width: 2.4; }
-.site.selected text { fill: #dff9ef; font-weight: 800; }
+.removed-arc { fill: none; stroke: rgba(255,141,121,.62); stroke-width: 7; stroke-linecap: round; }
+.site { cursor: help; }
+.site line { stroke: #65867c; stroke-width: 1.25; opacity: .75; }
+.site:hover line { stroke: #a0bcb3; opacity: 1; }
+.site.selected line { stroke: var(--mint); stroke-width: 2.6; opacity: 1; }
+.site-callout { pointer-events: none; }
+.site-callout path { fill: none; stroke: rgba(142,240,202,.62); stroke-width: 1.25; }
+.site-callout rect { fill: #11251f; stroke: rgba(142,240,202,.34); stroke-width: 1; }
+.site-callout text { fill: #e3f8f1; font: 750 9px 'Avenir Next', 'Segoe UI', system-ui, sans-serif; }
 .map-title { fill: #e8f5f1; font: 700 15px 'Avenir Next', 'Segoe UI', system-ui, sans-serif; }
 .map-length { fill: #6f8f85; font: 500 11px 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; }
 .map-insert-label { fill: var(--mint); font: 700 10px 'Avenir Next', 'Segoe UI', system-ui, sans-serif; }
