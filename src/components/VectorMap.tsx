@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Orf, RestrictionSite } from '../core/types';
 import { formatBp } from '../core/sequence';
 
@@ -77,9 +78,20 @@ export default function VectorMap({
   const size = compact ? 300 : 430;
   const center = size / 2;
   const radius = compact ? 94 : 132;
+  const [hoveredSite, setHoveredSite] = useState<RestrictionSite | null>(null);
+  const [pinnedSite, setPinnedSite] = useState<RestrictionSite | null>(null);
   const selectedKeys = new Set(selected.map((site) => `${site.enzyme}-${site.position}`));
   const angleFor = (position: number) => (position / Math.max(1, sequenceLength)) * 360;
   const labels = compact ? [] : labelPositions(selected, center, radius, angleFor);
+  const inspectedSite = hoveredSite ?? pinnedSite;
+  const inspectedKey = inspectedSite ? `${inspectedSite.enzyme}-${inspectedSite.position}` : '';
+  const inspectedSelected = inspectedSite ? selectedKeys.has(inspectedKey) : false;
+
+  const togglePinnedSite = (site: RestrictionSite) => {
+    const key = `${site.enzyme}-${site.position}`;
+    const pinnedKey = pinnedSite ? `${pinnedSite.enzyme}-${pinnedSite.position}` : '';
+    setPinnedSite(pinnedKey === key ? null : site);
+  };
 
   return (
     <div className={`vector-map ${compact ? 'compact' : ''}`}>
@@ -114,14 +126,40 @@ export default function VectorMap({
         )}
 
         {sites.map((site, index) => {
+          const key = `${site.enzyme}-${site.position}`;
           const angle = angleFor(site.position);
-          const inner = polar(center, center, radius - 8, angle);
-          const outer = polar(center, center, radius + (compact ? 15 : 24), angle);
-          const isSelected = selectedKeys.has(`${site.enzyme}-${site.position}`);
+          const inner = polar(center, center, radius - 10, angle);
+          const outer = polar(center, center, radius + (compact ? 15 : 22), angle);
+          const hitInner = polar(center, center, radius - 20, angle);
+          const hitOuter = polar(center, center, radius + (compact ? 24 : 34), angle);
+          const dot = polar(center, center, radius + (compact ? 17 : 24), angle);
+          const isSelected = selectedKeys.has(key);
+          const isActive = inspectedKey === key;
+          const classes = ['site', isSelected && 'selected', isActive && 'active'].filter(Boolean).join(' ');
+
           return (
-            <g key={`${site.enzyme}-${site.position}-${index}`} className={isSelected ? 'site selected' : 'site'}>
-              <title>{`${site.enzyme} · ${site.recognition} · position ${site.position + 1}`}</title>
-              <line x1={inner.x} y1={inner.y} x2={outer.x} y2={outer.y} />
+            <g
+              key={`${key}-${index}`}
+              className={classes}
+              role="button"
+              tabIndex={0}
+              aria-label={`${site.enzyme}, ${site.recognition}, position ${site.position + 1}`}
+              aria-pressed={pinnedSite ? `${pinnedSite.enzyme}-${pinnedSite.position}` === key : false}
+              onMouseEnter={() => setHoveredSite(site)}
+              onMouseLeave={() => setHoveredSite(null)}
+              onFocus={() => setHoveredSite(site)}
+              onBlur={() => setHoveredSite(null)}
+              onClick={() => togglePinnedSite(site)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  togglePinnedSite(site);
+                }
+              }}
+            >
+              <line className="site-hit-area" x1={hitInner.x} y1={hitInner.y} x2={hitOuter.x} y2={hitOuter.y} />
+              <line className="site-mark" x1={inner.x} y1={inner.y} x2={outer.x} y2={outer.y} />
+              <circle className="site-dot" cx={dot.x} cy={dot.y} r={isSelected || isActive ? 2.9 : 2.2} />
             </g>
           );
         })}
@@ -137,9 +175,24 @@ export default function VectorMap({
           );
         })}
 
-        <text x={center} y={center - 10} textAnchor="middle" className="map-title">{title}</text>
-        <text x={center} y={center + 17} textAnchor="middle" className="map-length">{formatBp(sequenceLength)}</text>
-        {insertion?.label && <text x={center} y={center + 41} textAnchor="middle" className="map-insert-label">+ {insertion.label}</text>}
+        {inspectedSite && !compact ? (
+          <g className="map-inspector" pointerEvents="none">
+            <text x={center} y={center - 42} textAnchor="middle" className="map-inspector-kicker">Restriction site</text>
+            <text x={center} y={center - 14} textAnchor="middle" className="map-title">{inspectedSite.enzyme}</text>
+            <text x={center} y={center + 10} textAnchor="middle" className="map-site-sequence">{inspectedSite.recognition}</text>
+            <text x={center} y={center + 32} textAnchor="middle" className="map-length">Position {inspectedSite.position + 1}</text>
+            <text x={center} y={center + 53} textAnchor="middle" className={inspectedSelected ? 'map-site-status selected' : 'map-site-status'}>
+              {inspectedSelected ? 'Selected in this route' : 'Unique vector cut · insert-safe'}
+            </text>
+          </g>
+        ) : (
+          <>
+            <text x={center} y={center - 10} textAnchor="middle" className="map-title">{title}</text>
+            <text x={center} y={center + 17} textAnchor="middle" className="map-length">{formatBp(sequenceLength)}</text>
+            {!compact && sites.length > 0 && <text x={center} y={center + 42} textAnchor="middle" className="map-hint">Hover or tap a cut site</text>}
+            {insertion?.label && <text x={center} y={center + 41} textAnchor="middle" className="map-insert-label">+ {insertion.label}</text>}
+          </>
+        )}
       </svg>
     </div>
   );
