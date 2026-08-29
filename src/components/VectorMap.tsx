@@ -75,9 +75,9 @@ export default function VectorMap({
   insertion,
   compact = false,
 }: Props) {
-  const size = compact ? 300 : 430;
+  const size = compact ? 340 : 430;
   const center = size / 2;
-  const radius = compact ? 94 : 132;
+  const radius = compact ? 112 : 132;
   const [hoveredSite, setHoveredSite] = useState<RestrictionSite | null>(null);
   const [pinnedSite, setPinnedSite] = useState<RestrictionSite | null>(null);
   const selectedKeys = new Set(selected.map((site) => `${site.enzyme}-${site.position}`));
@@ -194,9 +194,9 @@ export default function VectorMap({
           </g>
         ) : compact ? (
           <>
-            <text x={center} y={center - 10} textAnchor="middle" className="map-title">{title}</text>
-            <text x={center} y={center + 17} textAnchor="middle" className="map-length">{formatBp(sequenceLength)}</text>
-            {insertion?.label && <text x={center} y={center + 41} textAnchor="middle" className="map-insert-label">+ {insertion.label}</text>}
+            <text x={center} y={center - 14} textAnchor="middle" className="map-title">{title}</text>
+            <text x={center} y={center + 16} textAnchor="middle" className="map-length">{formatBp(sequenceLength)}</text>
+            {insertion?.label && <text x={center} y={center + 43} textAnchor="middle" className="map-insert-label">+ {insertion.label}</text>}
           </>
         ) : null}
       </svg>
