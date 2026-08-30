@@ -1,12 +1,11 @@
-import { AlertTriangle, Check, FlaskConical } from 'lucide-react';
-import type { AnalysisResult, ConstructSimulation, EnzymePair, PrimerPairDesign } from '../core/types';
+import { AlertTriangle, Check } from 'lucide-react';
+import type { AnalysisResult, EnzymePair, PrimerPairDesign } from '../core/types';
 import { buildDesignChecks, type DesignCheck } from '../core/checks';
 
 interface Props {
   analysis: AnalysisResult;
   pair: EnzymePair;
   primers: PrimerPairDesign;
-  construct: ConstructSimulation;
 }
 
 function CheckRow({ check }: { check: DesignCheck }) {
@@ -22,8 +21,8 @@ function CheckRow({ check }: { check: DesignCheck }) {
   );
 }
 
-export default function DesignChecks({ analysis, pair, primers, construct }: Props) {
-  const checks = buildDesignChecks(analysis, pair, primers, construct);
+export default function DesignChecks({ analysis, pair, primers }: Props) {
+  const checks = buildDesignChecks(analysis, pair, primers);
   const passed = checks.filter((check) => check.status === 'pass').length;
   const groups = ['Route', 'Primers'] as const;
 

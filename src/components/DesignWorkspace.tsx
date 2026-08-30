@@ -211,7 +211,7 @@ export default function DesignWorkspace({
                 <PrimerPanel embedded design={primerDesign} mode={primerMode} onModeChange={onPrimerModeChange} />
               )}
               {tab === 'checks' && (
-                <DesignChecks analysis={analysis} pair={selectedPair} primers={primerDesign} construct={construct} />
+                <DesignChecks analysis={analysis} pair={selectedPair} primers={primerDesign} />
               )}
               {tab === 'construct' && <ConstructPanel vector={vector} insert={insert} construct={construct} />}
             </div>

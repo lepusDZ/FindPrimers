@@ -1,10 +1,10 @@
-import type { AnalysisResult, ConstructSimulation, EnzymePair, PrimerPairDesign } from './types';
+import type { AnalysisResult, EnzymePair, PrimerPairDesign } from './types';
 
 export type CheckStatus = 'pass' | 'review';
 
 export interface DesignCheck {
   id: string;
-  group: 'Route' | 'Primers' | 'Simulation';
+  group: 'Route' | 'Primers';
   label: string;
   detail: string;
   status: CheckStatus;
@@ -18,7 +18,6 @@ export function buildDesignChecks(
   analysis: AnalysisResult,
   pair: EnzymePair,
   primers: PrimerPairDesign,
-  construct: ConstructSimulation,
 ): DesignCheck[] {
   const first = enzymeForSite(analysis, pair.first);
   const second = enzymeForSite(analysis, pair.second);
