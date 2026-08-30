@@ -354,14 +354,30 @@ footer { width: min(1240px, calc(100% - 48px)); margin: 72px auto 0; padding: 30
 .check-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .check-group { min-width: 0; padding: 12px; border: 1px solid rgba(190,226,215,.08); border-radius: 12px; background: rgba(7,19,16,.48); }
 .check-group-title { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; color: #68857b; font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-.design-check { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-top: 1px solid rgba(190,226,215,.055); }
+.design-check { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-top: 1px solid rgba(190,226,215,.055); }
 .check-group-title + .design-check { border-top: 0; padding-top: 3px; }
-.design-check-icon { width: 24px; height: 24px; display: grid; flex: 0 0 auto; place-items: center; border-radius: 7px; }
+.design-check-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  line-height: 0;
+  border-radius: 7px;
+}
+.design-check-icon svg { display: block; }
 .design-check.pass .design-check-icon { color: var(--mint); background: rgba(99,216,177,.07); }
 .design-check.review .design-check-icon { color: var(--amber); background: rgba(244,199,106,.07); }
-.design-check strong, .design-check span { display: block; }
+.design-check strong,
+.design-check > div > span {
+  display: block;
+}
 .design-check strong { color: #bdd5cd; font-size: 9px; }
 .design-check > div > span { margin-top: 2px; color: #68847a; font-size: 8px; line-height: 1.45; }
+.design-check-icon svg {
+  display: block;
+}
 
 @media (max-width: 620px) {
   .checks-heading { align-items: flex-start; flex-direction: column; }
