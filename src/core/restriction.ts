@@ -89,6 +89,14 @@ function deriveArc(a: RestrictionSite, b: RestrictionSite, vectorLength: number)
   return { first: high, second: low, removedLength: wrapGap, wraps: true };
 }
 
+export function getInterveningSegment(pair: EnzymePair, vectorLength: number): { start: number; end: number } {
+  if (vectorLength <= 0) return { start: 0, end: 0 };
+  return {
+    start: (pair.first.position + pair.first.length) % vectorLength,
+    end: pair.second.position % vectorLength,
+  };
+}
+
 export function rankEnzymePairs(enzymes: EnzymeAnalysis[], vectorLength: number): EnzymePair[] {
   const usable = enzymes.filter((e) => e.usable);
   const pairs: EnzymePair[] = [];

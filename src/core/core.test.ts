@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ParsedSequence } from './types';
 import { reverseComplement } from './sequence';
-import { analyzeDesign } from './restriction';
+import { analyzeDesign, getInterveningSegment } from './restriction';
 import { designPrimers, simulateConstruct } from './primers';
 import { parseSequenceText } from './parsers';
 
@@ -62,6 +62,19 @@ describe('restriction analysis', () => {
     const ecoRI = result.enzymes.find((e) => e.enzyme === 'EcoRI');
     expect(ecoRI?.vectorSites).toHaveLength(1);
     expect(ecoRI?.vectorSites[0].position).toBe(vector.sequence.length - 4);
+  });
+
+
+  it('keeps the displayed intervening segment aligned with the pair length', () => {
+    const site = (enzyme: string, position: number) => ({
+      enzyme, pattern: 'AAAAAA', recognition: 'AAAAAA', position, length: 6, orfConflict: false,
+    });
+    const pair = {
+      id: 'wrap', first: site('A', 90), second: site('B', 10), removedLength: 14, wraps: true, score: 100, warnings: [], rationale: [],
+    };
+    const segment = getInterveningSegment(pair, 100);
+    expect(segment).toEqual({ start: 96, end: 10 });
+    expect((segment.end - segment.start + 100) % 100).toBe(pair.removedLength);
   });
 
   it('does not rank two enzyme names that occupy the same overlapping site as an independent pair', () => {
