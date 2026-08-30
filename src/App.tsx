@@ -96,7 +96,7 @@ export default function App() {
       <header className="site-header">
         <a className="brand" href="#top" aria-label="FindPrimers home">
           <span className="brand-mark"><Dna size={21} /></span>
-          <span>FindPrimers</span><sup>v2</sup>
+          <span>FindPrimers</span>
         </a>
         <nav className="header-actions">
           <input ref={projectInputRef} className="hidden-input" type="file" accept=".json,application/json" onChange={(e: ChangeEvent<HTMLInputElement>) => void importProject(e.target.files?.[0])} />
@@ -179,7 +179,7 @@ export default function App() {
       </main>
 
       <footer>
-        <div><span className="brand footer-brand"><span className="brand-mark"><Dna size={17} /></span>FindPrimers</span><span>Open-source cloning design aid.</span></div>
+        <div><span className="brand footer-brand"><span className="brand-mark"><Dna size={17} /></span>FindPrimers</span></div>
         <p>Validate final primers and enzyme conditions before experimental use.</p>
       </footer>
     </div>
