@@ -63,9 +63,6 @@ function Overview({
         <div className="map-legend">
           <span><i className="legend-cut" /> recognition site</span>
           <span><i className="legend-orf" /> coding region</span>
-          <span><i className="legend-selected" /> selected sites</span>
-          <span><i className="legend-preview" /> pair preview</span>
-          <span><i className="legend-removed" /> replaced vector</span>
         </div>
       </div>
 

@@ -209,9 +209,6 @@ main { position: relative; }
 .map-legend i { display: inline-block; width: 13px; height: 3px; border-radius: 2px; }
 .legend-cut { background: #65867c; }
 .legend-orf { background: var(--aqua); opacity: .6; }
-.legend-selected { background: var(--mint); height: 4px !important; }
-.legend-preview { background: var(--amber); }
-.legend-removed { background: var(--coral); }
 
 
 .pair-list { max-height: calc(100vh - 165px); overflow: auto; padding-right: 5px; scrollbar-width: thin; scrollbar-color: #27443a transparent; }
