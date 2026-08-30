@@ -4,6 +4,7 @@ import { reverseComplement } from './sequence';
 import { analyzeDesign, getInterveningSegment } from './restriction';
 import { designPrimers, simulateConstruct } from './primers';
 import { parseSequenceText } from './parsers';
+import { buildDesignChecks } from './checks';
 
 const parsed = (sequence: string, circular = false): ParsedSequence => ({
   name: circular ? 'Vector' : 'Insert', sequence, circular, annotations: [], source: 'plain',
@@ -105,5 +106,16 @@ describe('primer design and simulation', () => {
     const simulation = simulateConstruct(vector.sequence, insert.sequence, pair);
     expect(simulation.sequence.length).toBe(simulation.finalLength);
     expect(simulation.finalLength).toBe(vector.sequence.length - pair.removedLength + insert.sequence.length);
+  });
+
+  it('builds preflight checks from the same analysis and primer results', () => {
+    const analysis = analyzeDesign(vector, insert);
+    const design = designPrimers(vector.sequence, insert.sequence, pair, 'optimized');
+    const simulation = simulateConstruct(vector.sequence, insert.sequence, pair);
+    const checks = buildDesignChecks(analysis, pair, design, simulation);
+
+    expect(checks.find((check) => check.id === 'vector-cuts')?.status).toBe('pass');
+    expect(checks.find((check) => check.id === 'insert-cuts')?.status).toBe('pass');
+    expect(checks.find((check) => check.id === 'enzyme-chemistry')?.status).toBe('review');
   });
 });

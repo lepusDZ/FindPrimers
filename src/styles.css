@@ -341,3 +341,31 @@ footer { width: min(1240px, calc(100% - 48px)); margin: 72px auto 0; padding: 30
 .fatal-error > div { max-width: 520px; }
 .fatal-error h1 { margin: 8px 0 10px; font-size: clamp(32px, 6vw, 52px); letter-spacing: -.045em; }
 .fatal-error p:not(.eyebrow) { margin: 0 auto 22px; color: var(--muted); line-height: 1.6; }
+
+/* Design preflight */
+.checks-panel { padding: 2px 2px 4px; }
+.checks-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 16px; }
+.checks-heading h3 { margin: 4px 0 5px; font-size: 24px; letter-spacing: -.035em; }
+.checks-heading p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.checks-summary { display: flex; align-items: baseline; gap: 5px; flex: 0 0 auto; padding: 8px 10px; border: 1px solid rgba(142,240,202,.09); border-radius: 9px; color: #78968c; background: rgba(142,240,202,.025); font-size: 8px; text-transform: uppercase; letter-spacing: .04em; }
+.checks-summary svg { align-self: center; color: var(--mint); }
+.checks-summary strong { color: #c9e2da; font: 700 10px 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; }
+.checks-summary i { color: #3c5b51; font-style: normal; }
+.check-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.check-group { min-width: 0; padding: 12px; border: 1px solid rgba(190,226,215,.08); border-radius: 12px; background: rgba(7,19,16,.48); }
+.check-group:last-child { grid-column: 1 / -1; }
+.check-group-title { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; color: #68857b; font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+.design-check { display: flex; align-items: flex-start; gap: 8px; padding: 8px 0; border-top: 1px solid rgba(190,226,215,.055); }
+.check-group-title + .design-check { border-top: 0; padding-top: 3px; }
+.design-check-icon { width: 24px; height: 24px; display: grid; flex: 0 0 auto; place-items: center; border-radius: 7px; }
+.design-check.pass .design-check-icon { color: var(--mint); background: rgba(99,216,177,.07); }
+.design-check.review .design-check-icon { color: var(--amber); background: rgba(244,199,106,.07); }
+.design-check strong, .design-check span { display: block; }
+.design-check strong { color: #bdd5cd; font-size: 9px; }
+.design-check > div > span { margin-top: 2px; color: #68847a; font-size: 8px; line-height: 1.45; }
+
+@media (max-width: 620px) {
+  .checks-heading { align-items: flex-start; flex-direction: column; }
+  .check-groups { grid-template-columns: 1fr; }
+  .check-group:last-child { grid-column: auto; }
+}

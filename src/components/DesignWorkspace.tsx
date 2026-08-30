@@ -11,13 +11,14 @@ import type {
 } from '../core/types';
 import { formatBp } from '../core/sequence';
 import { getInterveningSegment } from '../core/restriction';
+import DesignChecks from './DesignChecks';
 import InsertCompatibility from './InsertCompatibility';
 import PairSelector from './PairSelector';
 import PrimerPanel from './PrimerPanel';
 import Tooltip from './Tooltip';
 import VectorMap from './VectorMap';
 
-type DetailTab = 'overview' | 'primers' | 'construct';
+type DetailTab = 'overview' | 'primers' | 'checks' | 'construct';
 
 interface Props {
   analysis: AnalysisResult;
@@ -182,7 +183,7 @@ export default function DesignWorkspace({
             </div>
 
             <div className="detail-tabs" role="tablist" aria-label="Selected design details">
-              {(['overview', 'primers', 'construct'] as DetailTab[]).map((item) => (
+              {(['overview', 'primers', 'checks', 'construct'] as DetailTab[]).map((item) => (
                 <button
                   key={item}
                   role="tab"
@@ -208,6 +209,9 @@ export default function DesignWorkspace({
               )}
               {tab === 'primers' && (
                 <PrimerPanel embedded design={primerDesign} mode={primerMode} onModeChange={onPrimerModeChange} />
+              )}
+              {tab === 'checks' && (
+                <DesignChecks analysis={analysis} pair={selectedPair} primers={primerDesign} construct={construct} />
               )}
               {tab === 'construct' && <ConstructPanel vector={vector} insert={insert} construct={construct} />}
             </div>
