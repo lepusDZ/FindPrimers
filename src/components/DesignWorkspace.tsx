@@ -10,6 +10,7 @@ import type {
   RestrictionSite,
 } from '../core/types';
 import { formatBp } from '../core/sequence';
+import { getInterveningSegment } from '../core/restriction';
 import InsertCompatibility from './InsertCompatibility';
 import PairSelector from './PairSelector';
 import PrimerPanel from './PrimerPanel';
@@ -39,17 +40,15 @@ function Overview({
   pair,
   previewPair,
 }: Pick<Props, 'analysis' | 'vector' | 'insert' | 'vectorSites'> & { pair: EnzymePair; previewPair?: EnzymePair | null }) {
-  const removedStart = (pair.first.position + pair.first.length) % vector.sequence.length;
-  const previewRemovedStart = previewPair
-    ? (previewPair.first.position + previewPair.first.length) % vector.sequence.length
-    : undefined;
+  const removedSegment = getInterveningSegment(pair, vector.sequence.length);
+  const previewSegment = previewPair ? getInterveningSegment(previewPair, vector.sequence.length) : undefined;
 
   return (
     <div className="overview-grid">
       <div className="overview-map-card">
         <div className="panel-label">
           <span>Vector map</span>
-          <span className="subtle">hover sites or pairs to inspect</span>
+          <span className="subtle">hover a site or pair to preview</span>
         </div>
         <VectorMap
           sequenceLength={vector.sequence.length}
@@ -58,17 +57,15 @@ function Overview({
           sites={vectorSites}
           selected={[pair.first, pair.second]}
           preview={previewPair ? [previewPair.first, previewPair.second] : []}
-          removedSegment={{ start: removedStart, end: pair.second.position }}
-          previewSegment={previewPair && previewRemovedStart !== undefined
-            ? { start: previewRemovedStart, end: previewPair.second.position }
-            : undefined}
+          removedSegment={removedSegment}
+          previewSegment={previewSegment}
         />
         <div className="map-legend">
-          <span><i className="legend-cut" /> usable site</span>
-          <span><i className="legend-orf" /> CDS / ORF</span>
-          <span><i className="legend-selected" /> selected</span>
+          <span><i className="legend-cut" /> recognition site</span>
+          <span><i className="legend-orf" /> coding region</span>
+          <span><i className="legend-selected" /> selected sites</span>
           <span><i className="legend-preview" /> pair preview</span>
-          <span><i className="legend-removed" /> replaced segment</span>
+          <span><i className="legend-removed" /> replaced vector</span>
         </div>
       </div>
 
