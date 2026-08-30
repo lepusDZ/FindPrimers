@@ -1,20 +1,42 @@
 # FindPrimers
 
-FindPrimers is a restriction-cloning primer design tool. Give it a vector and insert, compare compatible restriction-enzyme pairs, review the primers, and preview the resulting construct.
+FindPrimers is a restriction-cloning primer design tool. Add a vector and insert, compare compatible enzyme pairs, generate primers, and preview the resulting construct without jumping between several separate tools.
 
-**Live site:** https://lepusdz.github.io/FindPrimers/
+[Try FindPrimers →](https://lepusdz.github.io/FindPrimers/)
+
+It brings the parts of an ORF finder, restriction-site analyzer, plasmid viewer, and primer designer that are useful for routine restriction cloning into one workflow.
 
 ## Features
 
-- Plain DNA, FASTA, and GenBank input
-- Circular-aware restriction-site scanning
-- Ranked enzyme pairs that cut the vector once and the insert zero times
-- GenBank CDS annotations with ORF prediction as a fallback
-- Quick and Tm-aware primer design modes
-- Predicted construct preview
-- Project JSON import/export
+- Paste DNA or open FASTA and GenBank sequences
+- Find restriction enzymes that cut the vector once and the insert zero times
+- Rank compatible two-enzyme cloning routes
+- Show GenBank CDS annotations or predict ORFs when annotations are unavailable
+- Inspect restriction sites directly on a circular vector map
+- Generate quick or Tm-aware cloning primers
+- Run a preflight check for cut sites, coding-region conflicts, primer balance, and known simulation limits
+- Preview the predicted construct
+- Export primers as CSV and save/reopen FindPrimers project files
 
-## Development
+## How it works
+
+1. Add a circular vector and an insert.
+2. Click **Analyze cloning design**.
+3. Compare the ranked enzyme pairs and inspect them on the vector map.
+4. Review the primers, preflight checks, and predicted construct for the selected route.
+5. Export the primer table or save the project for later.
+
+Use **Try an example** if you just want to explore the workflow.
+
+## Primer modes
+
+**Quick** keeps the original FindPrimers approach: a 6-base vector flank, the selected restriction site, and a fixed 20 nt insert-annealing region.
+
+**Optimized** searches 18–32 nt annealing regions and scores them using nearest-neighbor Tm, Tm balance, GC content, 3′ base quality, and simple hairpin/dimer complementarity checks.
+
+The optimized mode is intentionally lightweight and is not a replacement for Primer3.
+
+## Run locally
 
 Use Node 24 LTS.
 
@@ -23,42 +45,29 @@ npm ci
 npm run dev
 ```
 
-Other useful commands:
+Useful checks:
 
 ```bash
 npm test
 npm run typecheck
 npm run build
-npm run check
 ```
 
-The Vite base path is `/FindPrimers/` because the app is deployed from the project GitHub Pages URL.
+## Notes
 
-## Project structure
+FindPrimers currently models sequence-level restriction cloning. The bundled enzyme data includes recognition motifs, but not complete supplier metadata such as cleavage offsets, overhang compatibility, methylation sensitivity, star activity, buffer compatibility, or heat inactivation.
 
-```text
-src/
-├── components/        React UI and sequence visualizations
-├── core/              sequence, ORF, restriction, primer, and project logic
-├── data/enzymes.json  restriction-enzyme recognition motifs
-├── App.tsx
-├── main.tsx
-└── styles.css
-```
+Before ordering primers or running a digest, verify the selected enzymes and final primer sequences against the supplier documentation.
 
-The code in `src/core/` is independent of React so the biological calculations can be tested without the UI.
+## Tech
 
-## Primer modes
+- React
+- TypeScript
+- Vite
+- Vitest
+- GitHub Pages
 
-**Quick** uses a 6-base vector flank, the selected restriction site, and a fixed 20 nt insert-annealing region.
-
-**Optimized** checks 18–32 nt annealing regions and scores them using nearest-neighbor Tm, Tm balance, GC content, 3′ GC, and simple hairpin/dimer complementarity checks. It is a lightweight implementation for this workflow, not Primer3.
-
-## Limitations
-
-The bundled enzyme data contains recognition motifs but not full supplier metadata. Pair ranking does not currently account for cleavage offsets, buffer compatibility, methylation sensitivity, star activity, heat inactivation, or enzyme-specific terminal-base requirements.
-
-Check the selected enzymes and final primer sequences against supplier documentation before experimental use.
+The biological calculations live in `src/core/` and are kept separate from the React UI so they can be tested independently.
 
 ## License
 
