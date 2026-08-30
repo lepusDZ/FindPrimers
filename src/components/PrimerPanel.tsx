@@ -1,6 +1,27 @@
-import { Check, Copy, Dna, ShieldCheck, TriangleAlert } from 'lucide-react';
+import { Check, Copy, Dna, Download, ShieldCheck, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import type { PrimerDesign, PrimerMode, PrimerPairDesign } from '../core/types';
+
+
+function downloadPrimerCsv(design: PrimerPairDesign) {
+  const rows = [
+    ['Name', 'Sequence (5′→3′)', 'Length', 'Annealing Tm (°C)', 'GC (%)'],
+    ...[design.forward, design.reverse].map((primer) => [
+      `${primer.name} primer`,
+      primer.fullSequence,
+      String(primer.fullSequence.length),
+      primer.metrics.tm.toFixed(1),
+      primer.metrics.gc.toFixed(1),
+    ]),
+  ];
+  const csv = rows.map((row) => row.map((value) => `\"${value.replace(/\"/g, '\"\"')}\"`).join(',')).join('\n');
+  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'findprimers-primers.csv';
+  link.click();
+  URL.revokeObjectURL(url);
+}
 
 function RiskPill({ value, label }: { value: number; label: string }) {
   const level = value >= 6 ? 'risk-high' : value >= 4 ? 'risk-mid' : 'risk-low';
@@ -53,9 +74,12 @@ export default function PrimerPanel({ design, mode, onModeChange, embedded = fal
           <h2>Ready-to-review primers</h2>
           <p>5′ tails are shown separately from the template-annealing region.</p>
         </div>
-        <div className="mode-switch" role="group" aria-label="Primer design mode">
-          <button className={mode === 'quick' ? 'active' : ''} onClick={() => onModeChange('quick')}>Quick <small>20 nt</small></button>
-          <button className={mode === 'optimized' ? 'active' : ''} onClick={() => onModeChange('optimized')}>Optimized <small>Tm-aware</small></button>
+        <div className="primer-toolbar">
+          <button className="primer-export-button" onClick={() => downloadPrimerCsv(design)}><Download size={14} /> Export CSV</button>
+          <div className="mode-switch" role="group" aria-label="Primer design mode">
+            <button className={mode === 'quick' ? 'active' : ''} onClick={() => onModeChange('quick')}>Quick <small>20 nt</small></button>
+            <button className={mode === 'optimized' ? 'active' : ''} onClick={() => onModeChange('optimized')}>Optimized <small>Tm-aware</small></button>
+          </div>
         </div>
       </div>
 

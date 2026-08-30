@@ -202,6 +202,6 @@ export function simulateConstruct(vector: string, insert: string, pair: EnzymePa
     finalLength: sequence.length,
     insertionStart,
     insertionEnd: insertionStart + insert.length,
-    note: 'Design-level simulation preserves the selected recognition sites and replaces the shorter intervening vector arc. Cleavage offsets/overhang compatibility are not modeled yet.',
+    note: 'Sequence preview only. Cleavage offsets and sticky-end compatibility are not modeled yet; confirm the selected enzymes with the supplier before cloning.',
   };
 }
