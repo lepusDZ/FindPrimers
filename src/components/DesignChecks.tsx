@@ -25,7 +25,7 @@ function CheckRow({ check }: { check: DesignCheck }) {
 export default function DesignChecks({ analysis, pair, primers, construct }: Props) {
   const checks = buildDesignChecks(analysis, pair, primers, construct);
   const passed = checks.filter((check) => check.status === 'pass').length;
-  const groups = ['Route', 'Primers', 'Simulation'] as const;
+  const groups = ['Route', 'Primers'] as const;
 
   return (
     <section className="checks-panel">
@@ -49,7 +49,6 @@ export default function DesignChecks({ analysis, pair, primers, construct }: Pro
         {groups.map((group) => (
           <div className="check-group" key={group}>
             <div className="check-group-title">
-              {group === 'Simulation' && <FlaskConical size={13} />}
               <span>{group}</span>
             </div>
             {checks.filter((check) => check.group === group).map((check) => <CheckRow key={check.id} check={check} />)}

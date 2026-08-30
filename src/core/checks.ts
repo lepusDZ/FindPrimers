@@ -73,12 +73,5 @@ export function buildDesignChecks(
       detail: `hairpin ${maxHairpin} · homodimer ${maxHomodimer} · heterodimer ${primers.heterodimerRisk}`,
       status: structureOk ? 'pass' : 'review',
     },
-    {
-      id: 'enzyme-chemistry',
-      group: 'Simulation',
-      label: 'Enzyme chemistry',
-      detail: `${construct.finalLength.toLocaleString()} bp construct preview · verify cut offsets, overhangs, and reaction conditions with the supplier`,
-      status: 'review',
-    },
   ];
 }
