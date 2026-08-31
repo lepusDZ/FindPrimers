@@ -46,7 +46,7 @@ export default function App() {
       setAnalysis(result);
       const preferred = preferredPairId ? result.pairs.find((p) => p.id === preferredPairId) : undefined;
       setSelectedPair(preferred ?? result.pairs[0] ?? null);
-      setError(result.pairs.length ? '' : 'No two-enzyme cloning pair passed the current filters. Check the diagnostics below.');
+      setError(result.pairs.length ? '' : 'No compatible cloning route passed the current filters. Check the diagnostics below.');
       window.setTimeout(() => analysisRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Analysis failed.');
@@ -146,7 +146,7 @@ export default function App() {
                 <div>
                   <div className="eyebrow">Restriction analysis</div>
                   <h2>{analysis.pairs.length ? 'Choose a cloning route.' : 'No clean pair found yet.'}</h2>
-                  <p>{analysis.pairs.length ? 'Select a candidate on the left and compare its route, primers, and predicted construct without leaving the workspace.' : 'FindPrimers could not identify two different enzymes that each cut the vector once and do not cut the insert.'}</p>
+                  <p>{analysis.pairs.length ? 'Select a candidate on the left and compare its route, primers, and predicted construct without leaving the workspace.' : 'FindPrimers could not identify a unique vector cut that also leaves the insert intact.'}</p>
                 </div>
                 <button className="secondary-button" onClick={() => { setAnalysis(null); setSelectedPair(null); window.scrollTo({ top: 520, behavior: 'smooth' }); }}><RefreshCw size={15} /> Edit sequences</button>
               </div>

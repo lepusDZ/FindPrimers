@@ -10,7 +10,7 @@ import type {
   RestrictionSite,
 } from '../core/types';
 import { formatBp } from '../core/sequence';
-import { getInterveningSegment } from '../core/restriction';
+import { getInterveningSegment, isSingleEnzymeRoute } from '../core/restriction';
 import DesignChecks from './DesignChecks';
 import InsertCompatibility from './InsertCompatibility';
 import PairSelector from './PairSelector';
@@ -19,6 +19,10 @@ import Tooltip from './Tooltip';
 import VectorMap from './VectorMap';
 
 type DetailTab = 'overview' | 'primers' | 'checks' | 'construct';
+
+function sitesForPair(pair: EnzymePair): RestrictionSite[] {
+  return isSingleEnzymeRoute(pair) ? [pair.first] : [pair.first, pair.second];
+}
 
 interface Props {
   analysis: AnalysisResult;
@@ -56,8 +60,8 @@ function Overview({
           title={vector.name || 'Vector'}
           orfs={analysis.vectorOrfs}
           sites={vectorSites}
-          selected={[pair.first, pair.second]}
-          preview={previewPair ? [previewPair.first, previewPair.second] : []}
+          selected={sitesForPair(pair)}
+          preview={previewPair ? sitesForPair(previewPair) : []}
           removedSegment={removedSegment}
           previewSegment={previewSegment}
         />
@@ -86,14 +90,16 @@ function Overview({
   );
 }
 
-function ConstructPanel({ vector, insert, construct }: Pick<Props, 'vector' | 'insert'> & { construct: ConstructSimulation }) {
+function ConstructPanel({ vector, insert, construct, pair }: Pick<Props, 'vector' | 'insert'> & { construct: ConstructSimulation; pair: EnzymePair }) {
   return (
     <div className="construct-tab">
       <div className="construct-tab-copy">
         <div className="panel-heading-row">
           <div>
             <h3>Predicted construct</h3>
-            <p>The shorter vector segment is replaced with the insert while retaining both selected recognition sites.</p>
+            <p>{isSingleEnzymeRoute(pair)
+              ? 'The insert is placed at the single unique restriction site. Its orientation is not fixed by the cloning route.'
+              : 'The shorter vector segment is replaced with the insert while retaining both selected recognition sites.'}</p>
           </div>
           <Tooltip content={construct.note}>
             <button className="info-button" aria-label="About construct simulation"><Info size={16} /></button>
@@ -168,8 +174,12 @@ export default function DesignWorkspace({
                 <div className="eyebrow">Selected route</div>
                 <h2><span>{selectedPair.first.enzyme}</span><b>+</b><span>{selectedPair.second.enzyme}</span></h2>
                 <p>
-                  Recognition positions {selectedPair.first.position + 1} and {selectedPair.second.position + 1}
-                  <span> · </span>{selectedPair.removedLength} bp intervening vector segment
+                  {isSingleEnzymeRoute(selectedPair) ? (
+                    <>Single unique site at position {selectedPair.first.position + 1}<span> · </span>non-directional cloning</>
+                  ) : (
+                    <>Recognition positions {selectedPair.first.position + 1} and {selectedPair.second.position + 1}
+                      <span> · </span>{selectedPair.removedLength} bp intervening vector segment</>
+                  )}
                 </p>
               </div>
               <div className="score-block">
@@ -213,7 +223,7 @@ export default function DesignWorkspace({
               {tab === 'checks' && (
                 <DesignChecks analysis={analysis} pair={selectedPair} primers={primerDesign} />
               )}
-              {tab === 'construct' && <ConstructPanel vector={vector} insert={insert} construct={construct} />}
+              {tab === 'construct' && <ConstructPanel vector={vector} insert={insert} construct={construct} pair={selectedPair} />}
             </div>
           </>
         ) : (

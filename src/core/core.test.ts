@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ParsedSequence } from './types';
 import { reverseComplement } from './sequence';
-import { analyzeDesign, getInterveningSegment } from './restriction';
+import { analyzeDesign, getInterveningSegment, isSingleEnzymeRoute } from './restriction';
 import { designPrimers, simulateConstruct } from './primers';
 import { parseSequenceText } from './parsers';
 import { buildDesignChecks } from './checks';
@@ -75,12 +75,34 @@ describe('restriction analysis', () => {
     };
     const segment = getInterveningSegment(pair, 100);
     expect(segment).toEqual({ start: 96, end: 10 });
-    expect((segment.end - segment.start + 100) % 100).toBe(pair.removedLength);
+    expect(segment).toBeDefined();
+    expect((segment!.end - segment!.start + 100) % 100).toBe(pair.removedLength);
   });
 
   it('does not rank two enzyme names that occupy the same overlapping site as an independent pair', () => {
     const result = analyzeDesign(parsed(`AAAAACTCGAGAAAAAGAATTCAAAAA`, true), parsed('ATGGCCGCCGCCGCCGCCGCCTAA'));
-    expect(result.pairs.some((pair) => Math.abs(pair.first.position - pair.second.position) < Math.max(pair.first.length, pair.second.length))).toBe(false);
+    expect(result.pairs
+      .filter((pair) => !isSingleEnzymeRoute(pair))
+      .some((pair) => Math.abs(pair.first.position - pair.second.position) < Math.max(pair.first.length, pair.second.length)))
+      .toBe(false);
+  });
+
+
+  it('offers a single-enzyme route for a unique insert-safe vector site', () => {
+    const result = analyzeDesign(parsed(`AAAAAGAATTCAAAAAAAAAAAAACTCGAGAAAAA`, true), parsed('ATGGCCGCCGCCGCCGCCGCCTAA'));
+    const ecoRI = result.pairs.find((pair) => pair.first.enzyme === 'EcoRI' && pair.second.enzyme === 'EcoRI');
+    expect(ecoRI).toBeDefined();
+    expect(ecoRI?.removedLength).toBe(0);
+    expect(ecoRI && isSingleEnzymeRoute(ecoRI)).toBe(true);
+    expect(ecoRI && getInterveningSegment(ecoRI, 36)).toBeUndefined();
+  });
+
+  it('represents every usable enzyme in at least one ranked route', () => {
+    const result = analyzeDesign(parsed(`AAAAAGAATTCAAAAAAAAAAAAACTCGAGAAAAA`, true), parsed('ATGGCCGCCGCCGCCGCCGCCTAA'));
+    const represented = new Set(result.pairs.flatMap((pair) => [pair.first.enzyme, pair.second.enzyme]));
+    for (const enzyme of result.enzymes.filter((entry) => entry.usable)) {
+      expect(represented.has(enzyme.enzyme)).toBe(true);
+    }
   });
 });
 
@@ -106,6 +128,24 @@ describe('primer design and simulation', () => {
     const simulation = simulateConstruct(vector.sequence, insert.sequence, pair);
     expect(simulation.sequence.length).toBe(simulation.finalLength);
     expect(simulation.finalLength).toBe(vector.sequence.length - pair.removedLength + insert.sequence.length);
+  });
+
+
+  it('inserts without deleting vector sequence for a single-enzyme route', () => {
+    const singlePair = analyzeDesign(vector, insert).pairs.find((candidate) => candidate.first.enzyme === 'EcoRI' && candidate.second.enzyme === 'EcoRI')!;
+    const simulation = simulateConstruct(vector.sequence, insert.sequence, singlePair);
+    expect(simulation.removedLength).toBe(0);
+    expect(simulation.sequence.length).toBe(vector.sequence.length + insert.sequence.length);
+    expect(simulation.finalLength).toBe(vector.sequence.length + insert.sequence.length);
+  });
+
+
+  it('flags a single-enzyme route as non-directional in preflight checks', () => {
+    const analysis = analyzeDesign(vector, insert);
+    const singlePair = analysis.pairs.find((candidate) => candidate.first.enzyme === 'EcoRI' && candidate.second.enzyme === 'EcoRI')!;
+    const design = designPrimers(vector.sequence, insert.sequence, singlePair, 'optimized');
+    const checks = buildDesignChecks(analysis, singlePair, design);
+    expect(checks.find((check) => check.id === 'directionality')?.status).toBe('review');
   });
 
   it('builds preflight checks from the same analysis and primer results', () => {

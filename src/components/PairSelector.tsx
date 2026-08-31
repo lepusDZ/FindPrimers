@@ -1,4 +1,5 @@
 import { AlertTriangle, Check, Sparkles } from 'lucide-react';
+import { isSingleEnzymeRoute } from '../core/restriction';
 import type { EnzymePair } from '../core/types';
 
 interface Props {
@@ -11,8 +12,9 @@ interface Props {
 export default function PairSelector({ pairs, selectedId, onSelect, onPreview }: Props) {
   return (
     <div className="pair-list">
-      {pairs.slice(0, 25).map((pair, index) => {
+      {pairs.map((pair, index) => {
         const selected = pair.id === selectedId;
+        const singleEnzyme = isSingleEnzymeRoute(pair);
         return (
           <button
             key={pair.id}
@@ -30,11 +32,15 @@ export default function PairSelector({ pairs, selectedId, onSelect, onPreview }:
                 {index === 0 && <span className="recommended-badge">Recommended</span>}
               </div>
               <div className="pair-meta">
-                <span>{pair.first.recognition}</span><span>·</span><span>{pair.second.recognition}</span><span>·</span><span>{pair.removedLength} bp removed</span>
+                {singleEnzyme ? (
+                  <><span>{pair.first.recognition}</span><span>·</span><span>single unique site</span><span>·</span><span>0 bp removed</span></>
+                ) : (
+                  <><span>{pair.first.recognition}</span><span>·</span><span>{pair.second.recognition}</span><span>·</span><span>{pair.removedLength} bp removed</span></>
+                )}
               </div>
               <div className="pair-signal">
                 {pair.warnings.length ? <AlertTriangle size={13} /> : <Check size={13} />}
-                <span>{pair.warnings[0] ?? 'Clean two-enzyme candidate'}</span>
+                <span>{pair.warnings[0] ?? 'Clean directional candidate'}</span>
               </div>
             </div>
             <div className="pair-score"><span>{pair.score}</span><small>/100</small></div>

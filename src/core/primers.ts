@@ -1,4 +1,5 @@
 import type { ConstructSimulation, EnzymePair, PrimerDesign, PrimerMetrics, PrimerMode, PrimerPairDesign } from './types';
+import { isSingleEnzymeRoute } from './restriction';
 import { circularSlice, gcPercent, reverseComplement } from './sequence';
 
 const NN: Record<string, [number, number]> = {
@@ -183,7 +184,10 @@ export function simulateConstruct(vector: string, insert: string, pair: EnzymePa
   let sequence: string;
   let insertionStart: number;
 
-  if (!pair.wraps) {
+  if (isSingleEnzymeRoute(pair)) {
+    insertionStart = vector.length ? (a.position + a.length) % vector.length : 0;
+    sequence = vector.slice(0, insertionStart) + insert + vector.slice(insertionStart);
+  } else if (!pair.wraps) {
     const left = vector.slice(0, a.position + a.length);
     const right = vector.slice(b.position);
     sequence = left + insert + right;

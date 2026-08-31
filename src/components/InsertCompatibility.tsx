@@ -1,4 +1,5 @@
 import { CheckCircle2, Dna } from 'lucide-react';
+import { isSingleEnzymeRoute } from '../core/restriction';
 import type { EnzymePair, Orf } from '../core/types';
 import { formatBp } from '../core/sequence';
 
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export default function InsertCompatibility({ length, orfs, pair }: Props) {
+  const sites = isSingleEnzymeRoute(pair) ? [pair.first] : [pair.first, pair.second];
+
   return (
     <div className="insert-compatibility">
       <div className="insert-compatibility-head">
@@ -19,7 +22,7 @@ export default function InsertCompatibility({ length, orfs, pair }: Props) {
         <span><Dna size={14} /> {orfs.length} CDS / ORF region{orfs.length === 1 ? '' : 's'}</span>
       </div>
       <div className="compatibility-grid">
-        {[pair.first, pair.second].map((site) => (
+        {sites.map((site) => (
           <div key={`${site.enzyme}-${site.position}`} className="compatibility-item">
             <CheckCircle2 size={16} />
             <div>
@@ -32,7 +35,9 @@ export default function InsertCompatibility({ length, orfs, pair }: Props) {
           <CheckCircle2 size={16} />
           <div>
             <strong>Insert stays intact</strong>
-            <span>Neither selected enzyme cuts inside the insert sequence.</span>
+            <span>{sites.length === 1
+              ? 'The selected enzyme does not cut inside the insert sequence.'
+              : 'Neither selected enzyme cuts inside the insert sequence.'}</span>
           </div>
         </div>
       </div>

@@ -89,11 +89,73 @@ function deriveArc(a: RestrictionSite, b: RestrictionSite, vectorLength: number)
   return { first: high, second: low, removedLength: wrapGap, wraps: true };
 }
 
-export function getInterveningSegment(pair: EnzymePair, vectorLength: number): { start: number; end: number } {
-  if (vectorLength <= 0) return { start: 0, end: 0 };
+export function isSingleEnzymeRoute(pair: EnzymePair): boolean {
+  return pair.first.enzyme === pair.second.enzyme
+    && pair.first.pattern === pair.second.pattern
+    && pair.first.position === pair.second.position;
+}
+
+export function getInterveningSegment(pair: EnzymePair, vectorLength: number): { start: number; end: number } | undefined {
+  if (vectorLength <= 0 || isSingleEnzymeRoute(pair)) return undefined;
   return {
     start: (pair.first.position + pair.first.length) % vectorLength,
     end: pair.second.position % vectorLength,
+  };
+}
+
+function buildPair(a: RestrictionSite, b: RestrictionSite, vectorLength: number, singleEnzyme = false): EnzymePair | null {
+  if (!singleEnzyme) {
+    const delta = Math.abs(a.position - b.position);
+    const circularDelta = Math.min(delta, vectorLength - delta);
+    if (circularDelta < Math.max(a.length, b.length)) return null;
+  }
+
+  const arc = singleEnzyme
+    ? { first: a, second: a, removedLength: 0, wraps: false }
+    : deriveArc(a, b, vectorLength);
+  const warnings: string[] = [];
+  const rationale: string[] = singleEnzyme
+    ? ['Enzyme cuts the vector once', 'Enzyme does not cut the insert', 'Single-site route removes no vector sequence']
+    : ['Both enzymes cut the vector once', 'Neither enzyme cuts the insert'];
+  let score = singleEnzyme ? 82 : 100;
+
+  if (singleEnzyme) {
+    warnings.push('Same enzyme on both ends gives a non-directional insert');
+  } else {
+    const removedFraction = vectorLength ? arc.removedLength / vectorLength : 1;
+    score -= Math.min(42, removedFraction * 70);
+    if (arc.removedLength <= 80) rationale.push('Sites are close together, preserving the backbone');
+    else if (arc.removedLength <= 400) rationale.push('Moderate backbone deletion between sites');
+    else warnings.push(`${arc.removedLength} bp of vector lies between the selected sites`);
+  }
+
+  const conflicts = singleEnzyme ? Number(a.orfConflict) : Number(a.orfConflict) + Number(b.orfConflict);
+  if (conflicts) {
+    score -= conflicts * 28;
+    warnings.push(conflicts > 1 ? 'Both cut sites overlap coding/ORF regions' : 'A selected cut site overlaps a coding/ORF region');
+  } else {
+    rationale.push(singleEnzyme ? 'Selected vector site avoids detected coding/ORF regions' : 'Selected vector sites avoid detected coding/ORF regions');
+  }
+
+  const minRecognition = Math.min(a.length, b.length);
+  if (minRecognition >= 6) {
+    score += 7;
+    rationale.push(singleEnzyme ? 'Recognition site is at least 6 bp long' : 'Both recognition sites are at least 6 bp long');
+  } else if (minRecognition <= 4) {
+    score -= 12;
+    warnings.push(singleEnzyme ? 'Enzyme has a short recognition motif' : 'At least one enzyme has a short recognition motif');
+  }
+
+  score = Math.max(0, Math.min(100, Math.round(score)));
+  return {
+    id: `${arc.first.enzyme}::${arc.second.enzyme}::${arc.first.position}::${arc.second.position}`,
+    first: arc.first,
+    second: arc.second,
+    removedLength: arc.removedLength,
+    wraps: arc.wraps,
+    score,
+    warnings,
+    rationale,
   };
 }
 
@@ -101,52 +163,15 @@ export function rankEnzymePairs(enzymes: EnzymeAnalysis[], vectorLength: number)
   const usable = enzymes.filter((e) => e.usable);
   const pairs: EnzymePair[] = [];
 
+  for (const enzyme of usable) {
+    const pair = buildPair(enzyme.vectorSites[0], enzyme.vectorSites[0], vectorLength, true);
+    if (pair) pairs.push(pair);
+  }
+
   for (let i = 0; i < usable.length; i += 1) {
     for (let j = i + 1; j < usable.length; j += 1) {
-      const a = usable[i].vectorSites[0];
-      const b = usable[j].vectorSites[0];
-      const delta = Math.abs(a.position - b.position);
-      const circularDelta = Math.min(delta, vectorLength - delta);
-      if (circularDelta < Math.max(a.length, b.length)) continue; // overlapping recognition regions are not two independent cloning sites
-      const arc = deriveArc(a, b, vectorLength);
-      const warnings: string[] = [];
-      const rationale: string[] = ['Both enzymes cut the vector once', 'Neither enzyme cuts the insert'];
-      let score = 100;
-
-      const removedFraction = vectorLength ? arc.removedLength / vectorLength : 1;
-      score -= Math.min(42, removedFraction * 70);
-      if (arc.removedLength <= 80) rationale.push('Sites are close together, preserving the backbone');
-      else if (arc.removedLength <= 400) rationale.push('Moderate backbone deletion between sites');
-      else warnings.push(`${arc.removedLength} bp of vector lies between the selected sites`);
-
-      const conflicts = Number(a.orfConflict) + Number(b.orfConflict);
-      if (conflicts) {
-        score -= conflicts * 28;
-        warnings.push(conflicts === 2 ? 'Both cut sites overlap coding/ORF regions' : 'One cut site overlaps a coding/ORF region');
-      } else {
-        rationale.push('Selected vector sites avoid detected coding/ORF regions');
-      }
-
-      const minRecognition = Math.min(a.length, b.length);
-      if (minRecognition >= 6) {
-        score += 7;
-        rationale.push('Both recognition sites are at least 6 bp long');
-      } else if (minRecognition <= 4) {
-        score -= 12;
-        warnings.push('At least one enzyme has a short recognition motif');
-      }
-
-      score = Math.max(0, Math.min(100, Math.round(score)));
-      pairs.push({
-        id: `${arc.first.enzyme}::${arc.second.enzyme}::${arc.first.position}::${arc.second.position}`,
-        first: arc.first,
-        second: arc.second,
-        removedLength: arc.removedLength,
-        wraps: arc.wraps,
-        score,
-        warnings,
-        rationale,
-      });
+      const pair = buildPair(usable[i].vectorSites[0], usable[j].vectorSites[0], vectorLength);
+      if (pair) pairs.push(pair);
     }
   }
 

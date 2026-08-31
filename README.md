@@ -10,11 +10,11 @@ It brings the parts of an ORF finder, restriction-site analyzer, plasmid viewer,
 
 - Paste DNA or open FASTA and GenBank sequences
 - Find restriction enzymes that cut the vector once and the insert zero times
-- Rank compatible two-enzyme cloning routes
+- Rank directional two-enzyme and single-enzyme cloning routes
 - Show GenBank CDS annotations or predict ORFs when annotations are unavailable
 - Inspect restriction sites directly on a circular vector map
 - Generate quick or Tm-aware cloning primers
-- Run a preflight check for cut sites, coding-region conflicts, primer balance, and known simulation limits
+- Run a preflight check for cut sites, insert orientation, coding-region conflicts, and primer quality
 - Preview the predicted construct
 - Export primers as CSV and save/reopen FindPrimers project files
 
@@ -57,7 +57,7 @@ npm run build
 
 FindPrimers currently models sequence-level restriction cloning. The bundled enzyme data includes recognition motifs, but not complete supplier metadata such as cleavage offsets, overhang compatibility, methylation sensitivity, star activity, buffer compatibility, or heat inactivation.
 
-Before ordering primers or running a digest, verify the selected enzymes and final primer sequences against the supplier documentation.
+Single-enzyme routes are non-directional, so clone orientation needs to be screened experimentally. Before ordering primers or running a digest, verify the selected enzymes and final primer sequences against the supplier documentation.
 
 ## Tech
 
